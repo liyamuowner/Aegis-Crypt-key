@@ -79,21 +79,24 @@
   @apply absolute rounded-full blur-[140px] opacity-20 animate-move;
 }
 
-::-webkit-scrollbar {
-  @apply w-[5px];
+.custom-scrollbar::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
 }
 
-::-webkit-scrollbar-track {
-  @apply bg-transparent;
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
 }
 
-::-webkit-scrollbar-thumb {
-  @apply bg-blue-500/20 rounded-full;
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(59, 130, 246, 0.2);
+  border-radius: 10px;
 }
 
-::-webkit-scrollbar-thumb:hover {
-  @apply bg-blue-500/40;
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(59, 130, 246, 0.4);
 }
+
 
 .scanline {
   @apply absolute top-0 left-0 w-full h-[2px] bg-blue-500/10 animate-scanline;

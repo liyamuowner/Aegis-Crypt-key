@@ -516,7 +516,7 @@ const Dashboard = ({ logToConsole, logs }) => {
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="relative w-full max-w-[500px] max-h-[90vh] glass border border-white/10 rounded-[3rem] shadow-2xl p-8 md:p-10 flex flex-col"
+              className="relative w-full max-w-[550px] max-h-[90vh] glass border border-white/10 rounded-[3rem] shadow-2xl p-8 md:p-10 flex flex-col"
             >
               <div className="flex justify-between items-center mb-8 shrink-0">
                 <h2 className="text-2xl font-black tracking-tighter uppercase">Node <span className="text-blue-500">Intel</span></h2>
@@ -555,11 +555,11 @@ const Dashboard = ({ logToConsole, logs }) => {
 
                 <div className="space-y-3">
                   <div className="flex items-center justify-between p-5 glass rounded-2xl border-white/5 group hover:bg-white/5 transition-all">
-                    <div className="flex items-center gap-4">
-                      <div className="p-3 bg-blue-500/10 text-blue-500 rounded-xl"><Globe className="w-5 h-5" /></div>
-                      <div>
+                    <div className="flex items-center gap-4 min-w-0 flex-1">
+                      <div className="p-3 bg-blue-500/10 text-blue-500 rounded-xl shrink-0"><Globe className="w-5 h-5" /></div>
+                      <div className="min-w-0 pr-4">
                         <p className="text-[9px] font-black text-gray-500 uppercase tracking-[0.2em]">Network Identity (IP)</p>
-                        <p className="text-sm font-bold text-white mt-1">{selectedNode.ip || 'N/A'} <span className="text-gray-600 text-xs font-mono ml-2">({selectedNode.platform || 'UNKNOWN'})</span></p>
+                        <p className="text-sm font-bold text-white mt-1 truncate">{selectedNode.ip || 'N/A'} <span className="text-gray-600 text-xs font-mono ml-2">({selectedNode.platform || 'UNKNOWN'})</span></p>
                       </div>
                     </div>
                     {selectedNode.ip && selectedNode.ip !== 'N/A' && (
@@ -576,11 +576,11 @@ const Dashboard = ({ logToConsole, logs }) => {
                   </div>
 
                   <div className="flex items-center justify-between p-5 glass rounded-2xl border-white/5 group hover:bg-white/5 transition-all">
-                    <div className="flex items-center gap-4">
-                      <div className="p-3 bg-purple-500/10 text-purple-500 rounded-xl"><Cpu className="w-5 h-5" /></div>
-                      <div>
+                    <div className="flex items-center gap-4 min-w-0 flex-1">
+                      <div className="p-3 bg-purple-500/10 text-purple-500 rounded-xl shrink-0"><Cpu className="w-5 h-5" /></div>
+                      <div className="min-w-0">
                         <p className="text-[9px] font-black text-gray-500 uppercase tracking-[0.2em]">Hardware Signature</p>
-                        <p className="text-xs font-mono font-bold text-gray-300 mt-1">{selectedNode.hwid || 'NOT LINKED'}</p>
+                        <p className="text-xs font-mono font-bold text-gray-300 mt-1 truncate">{selectedNode.hwid || 'NOT LINKED'}</p>
                       </div>
                     </div>
                   </div>

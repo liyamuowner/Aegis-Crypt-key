@@ -20,6 +20,8 @@ const Dashboard = ({ logToConsole, logs }) => {
   const [isForging, setIsForging] = useState(false);
   const [generatedKey, setGeneratedKey] = useState('');
   const [packageType, setPackageType] = useState('7');
+  const [customDays, setCustomDays] = useState('');
+
 
   const fetchLicenses = async () => {
     setLoading(true);
@@ -79,11 +81,14 @@ const Dashboard = ({ logToConsole, logs }) => {
       key += chars.charAt(Math.floor(Math.random() * chars.length));
     }
 
+    let daysToAdd = packageType === 'custom' ? parseInt(customDays) || 1 : parseInt(packageType);
     let expiry = new Date();
-    expiry.setDate(expiry.getDate() + parseInt(packageType));
+    expiry.setDate(expiry.getDate() + daysToAdd);
     
     const typeLabel = packageType === "7" ? "Standard Entry" : 
-                    packageType === "30" ? "Premium Access" : "Aegis Prime";
+                    packageType === "30" ? "Premium Access" : 
+                    packageType === "3650" ? "Aegis Prime" : `Custom (${daysToAdd}D)`;
+
 
     try {
       await setDoc(doc(db, "licenses", key), {
@@ -402,11 +407,12 @@ const Dashboard = ({ logToConsole, logs }) => {
               <div className="space-y-8">
                 <div>
                   <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-4 block">Select Authorization Tier</label>
-                  <div className="grid grid-cols-3 gap-3">
+                  <div className="grid grid-cols-2 gap-3">
                     {[
                       { val: '7', label: 'Standard', days: '7D' },
                       { val: '30', label: 'Premium', days: '30D' },
-                      { val: '3650', label: 'Prime', days: 'Life' }
+                      { val: '3650', label: 'Prime', days: 'Life' },
+                      { val: 'custom', label: 'Custom', days: 'Variable' }
                     ].map(tier => (
                       <button 
                         key={tier.val}
@@ -418,7 +424,28 @@ const Dashboard = ({ logToConsole, logs }) => {
                       </button>
                     ))}
                   </div>
+                  <AnimatePresence>
+                    {packageType === 'custom' && (
+                      <motion.div 
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        exit={{ opacity: 0, height: 0 }}
+                        className="mt-4 overflow-hidden"
+                      >
+                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-3 block">Duration (Days)</label>
+                        <input 
+                          type="number" 
+                          min="1"
+                          placeholder="Enter number of days..." 
+                          value={customDays}
+                          onChange={(e) => setCustomDays(e.target.value)}
+                          className="w-full px-6 py-4 rounded-2xl outline-none text-white font-bold tracking-widest text-sm bg-black/40 border border-white/5 focus:border-blue-500/50 transition-all"
+                        />
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
+
 
                 <div>
                   <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-4 block">Generated Output</label>

@@ -2,16 +2,19 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { db } from '../lib/firebase';
 import { collection, query, orderBy, limit, onSnapshot } from 'firebase/firestore';
-import { Activity, Terminal, Shield, Zap, TrendingUp, History, Globe, Cpu, Server } from 'lucide-react';
+import { Activity, Terminal, Shield, Zap, TrendingUp, History, Globe, Cpu, Server, X } from 'lucide-react';
 
 const Analytics = () => {
   const [activeSubTab, setActiveSubTab] = useState('analytics');
   const [globalLogs, setGlobalLogs] = useState([]);
+  const [licenses, setLicenses] = useState([]);
+  const [showBoundModal, setShowBoundModal] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const q = query(collection(db, 'logs'), orderBy('time', 'desc'), limit(50));
-    const unsubscribe = onSnapshot(q, (snapshot) => {
+    // 1. Listen to Global Logs
+    const qLogs = query(collection(db, 'logs'), orderBy('time', 'desc'), limit(50));
+    const unsubLogs = onSnapshot(qLogs, (snapshot) => {
       const logs = snapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data(),
@@ -21,8 +24,16 @@ const Analytics = () => {
       setLoading(false);
     });
 
-    return () => unsubscribe();
+    // 2. Fetch Licenses for Stats & Bound Modal
+    const qLicenses = query(collection(db, 'licenses'));
+    const unsubLicenses = onSnapshot(qLicenses, (snapshot) => {
+      setLicenses(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+    });
+
+    return () => { unsubLogs(); unsubLicenses(); };
   }, []);
+
+  const boundLicenses = licenses.filter(l => l.hwid);
 
   return (
     <div className="flex-1 flex flex-col h-screen overflow-hidden relative">
@@ -81,19 +92,24 @@ const Analytics = () => {
                 </div>
 
                 <div className="flex flex-col gap-6">
-                  <div className="flex-1 glass p-8 rounded-[2.5rem] border-white/5 flex flex-col justify-between group hover:bg-white/[0.03] transition-all">
+                  <button 
+                    onClick={() => setShowBoundModal(true)}
+                    className="flex-1 glass p-8 rounded-[2.5rem] border-white/5 flex flex-col justify-between group hover:bg-white/[0.03] transition-all hover:border-purple-500/30 text-left"
+                  >
                     <div className="flex justify-between items-start">
-                      <div className="p-3 bg-purple-500/10 text-purple-500 rounded-2xl group-hover:bg-purple-500 group-hover:text-white transition-colors duration-500"><Cpu className="w-5 h-5" /></div>
+                      <div className="p-3 bg-purple-500/10 text-purple-500 rounded-2xl group-hover:bg-purple-500 group-hover:text-white transition-colors duration-500 shadow-[0_0_15px_rgba(168,85,247,0.1)]"><Cpu className="w-5 h-5" /></div>
                       <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Active Links</span>
                     </div>
                     <div>
-                      <h4 className="text-3xl font-black text-white mb-1">HWID Verified</h4>
-                      <p className="text-xs text-purple-400 font-bold uppercase tracking-widest">Global Authority</p>
+                      <h4 className="text-3xl font-black text-white mb-1">{boundLicenses.length} HWID Verified</h4>
+                      <p className="text-xs text-purple-400 font-bold uppercase tracking-widest flex items-center gap-2">
+                        Global Authority <TrendingUp className="w-3 h-3" />
+                      </p>
                     </div>
-                  </div>
+                  </button>
                   <div className="flex-1 glass p-8 rounded-[2.5rem] border-white/5 flex flex-col justify-between group hover:bg-white/[0.03] transition-all">
                     <div className="flex justify-between items-start">
-                      <div className="p-3 bg-blue-500/10 text-blue-500 rounded-2xl group-hover:bg-blue-500 group-hover:text-white transition-colors duration-500"><Globe className="w-5 h-5" /></div>
+                      <div className="p-3 bg-blue-500/10 text-blue-500 rounded-2xl group-hover:bg-blue-500 group-hover:text-white transition-colors duration-500 shadow-[0_0_15px_rgba(59,130,246,0.1)]"><Globe className="w-5 h-5" /></div>
                       <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Sync Delay</span>
                     </div>
                     <div>
@@ -171,6 +187,66 @@ const Analytics = () => {
           )}
         </AnimatePresence>
       </div>
+
+      {/* drill-down Bound Keys Modal */}
+      <AnimatePresence>
+        {showBoundModal && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/80 backdrop-blur-xl">
+            <motion.div 
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="glass w-full max-w-5xl max-h-[85vh] rounded-[3rem] border-white/10 overflow-hidden flex flex-col shadow-[0_0_100px_rgba(168,85,247,0.2)]"
+            >
+              <div className="p-10 border-b border-white/5 flex items-center justify-between bg-purple-500/[0.02]">
+                <div className="flex items-center gap-6">
+                  <div className="p-4 bg-purple-500/10 text-purple-500 rounded-[1.5rem] shadow-[0_0_20px_rgba(168,85,247,0.2)]"><Shield className="w-8 h-8" /></div>
+                  <div>
+                    <h3 className="text-2xl font-black tracking-tighter text-white uppercase">Global Authority Nodes</h3>
+                    <p className="text-[10px] text-gray-500 font-bold tracking-[0.2em] uppercase mt-1">Bound Hardware Identity Index</p>
+                  </div>
+                </div>
+                <button onClick={() => setShowBoundModal(false)} className="p-4 hover:bg-white/10 rounded-2xl transition-all">
+                  <X className="w-6 h-6 text-gray-500 hover:text-white" />
+                </button>
+              </div>
+
+              <div className="flex-1 overflow-y-auto p-10 custom-scrollbar">
+                {boundLicenses.length === 0 ? (
+                  <div className="py-20 text-center text-gray-600 font-black uppercase tracking-widest text-xs">
+                    No nodes have been bound to hardware yet.
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {boundLicenses.map((l, i) => (
+                      <motion.div 
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: i * 0.05 }}
+                        key={l.id} 
+                        className="glass p-6 rounded-[2rem] border-purple-500/10 hover:border-purple-500/40 transition-all group"
+                      >
+                        <div className="flex justify-between items-start mb-4">
+                          <div className="p-3 bg-purple-500/10 text-purple-500 rounded-xl group-hover:bg-purple-500 group-hover:text-white transition-all"><Cpu className="w-4 h-4" /></div>
+                          <span className={`text-[8px] font-black tracking-widest uppercase px-3 py-1 rounded-full ${l.isActive ? 'bg-emerald-500/10 text-emerald-500' : 'bg-red-500/10 text-red-500'}`}>
+                            {l.isActive ? 'Active' : 'Locked'}
+                          </span>
+                        </div>
+                        <h4 className="font-mono text-white font-bold text-sm mb-1">{l.key}</h4>
+                        <p className="text-[9px] text-gray-500 font-black uppercase tracking-widest mb-4">{l.type}</p>
+                        <div className="pt-4 border-t border-white/5">
+                          <p className="text-[8px] text-blue-400 font-black tracking-widest uppercase mb-1">Hardware ID</p>
+                          <p className="text-[10px] font-mono text-gray-400 truncate">{l.hwid}</p>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

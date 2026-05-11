@@ -29,7 +29,26 @@ const Dashboard = ({ logToConsole, logs }) => {
     try {
       const querySnapshot = await getDocs(collection(db, "licenses"));
       const data = [];
-      querySnapshot.forEach(doc => data.push({ id: doc.id, ...doc.data() }));
+      const now = new Date();
+      const purgePromises = [];
+
+      querySnapshot.forEach(docSnap => {
+        const licenseData = { id: docSnap.id, ...docSnap.data() };
+        const expiryDate = licenseData.expiryDate?.toDate();
+
+        if (expiryDate && expiryDate <= now) {
+          logToConsole(`Auto-purging expired identifier: ${licenseData.key}`, 'warning');
+          purgePromises.push(deleteDoc(doc(db, "licenses", docSnap.id)));
+        } else {
+          data.push(licenseData);
+        }
+      });
+
+      if (purgePromises.length > 0) {
+        await Promise.all(purgePromises);
+        logToConsole(`Purged ${purgePromises.length} expired nodes.`, 'success');
+      }
+
       setLicenses(data);
       logToConsole(`Registry refresh complete. ${data.length} nodes mapped.`, 'success');
     } catch (e) {

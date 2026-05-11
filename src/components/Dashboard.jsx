@@ -46,7 +46,17 @@ const Dashboard = ({ logToConsole, logs }) => {
     revoked: licenses.filter(l => !l.isActive).length,
   };
 
+  const getDaysRemaining = (expiryTimestamp) => {
+    if (!expiryTimestamp) return 0;
+    const now = new Date();
+    const expiry = expiryTimestamp.toDate();
+    const diffTime = expiry - now;
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays > 0 ? diffDays : 0;
+  };
+
   const filteredLicenses = licenses.filter(l => {
+
     const matchesSearch = l.key.toLowerCase().includes(search.toLowerCase()) || 
                          (l.hwid && l.hwid.toLowerCase().includes(search.toLowerCase()));
     const matchesTier = tierFilter === '' || l.type.includes(tierFilter);
@@ -233,7 +243,11 @@ const Dashboard = ({ logToConsole, logs }) => {
                         </td>
                         <td className="py-6 px-4 text-[10px] font-bold text-gray-400 uppercase tracking-tighter">
                           {l.expiryDate?.toDate().toLocaleDateString()}
+                          <div className={`text-[8px] mt-1 ${getDaysRemaining(l.expiryDate) > 3 ? 'text-blue-500' : 'text-red-500 animate-pulse'}`}>
+                            {getDaysRemaining(l.expiryDate)} Days Remaining
+                          </div>
                         </td>
+
                         <td className="py-6 px-4 text-right">
                           <button 
                             onClick={(e) => { e.stopPropagation(); deleteKey(l.id); }}
@@ -370,7 +384,8 @@ const Dashboard = ({ logToConsole, logs }) => {
 
                 <div className="grid grid-cols-2 gap-4">
                   <DetailBox label="Hardware SIG" value={selectedNode.hwid || 'NOT LINKED'} mono />
-                  <DetailBox label="Registry End" value={selectedNode.expiryDate?.toDate().toLocaleDateString()} />
+                  <DetailBox label="Registry End" value={`${selectedNode.expiryDate?.toDate().toLocaleDateString()} (${getDaysRemaining(selectedNode.expiryDate)} Days Left)`} />
+
                   <DetailBox label="Platform" value={selectedNode.platform || 'UNKNOWN'} color="text-blue-400" />
                   <DetailBox label="Global IP" value={selectedNode.ip || 'N/A'} color="text-blue-400" />
                 </div>

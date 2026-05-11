@@ -35,6 +35,19 @@ const Analytics = () => {
 
   const boundLicenses = licenses.filter(l => l.hwid);
 
+  const sendPing = async () => {
+    try {
+      await addDoc(collection(db, 'logs'), {
+        msg: 'ADMIN: Manual System Diagnostics Ping',
+        type: 'info',
+        time: Timestamp.now(),
+        key: 'SYSTEM-ROOT'
+      });
+    } catch (e) {
+      console.error('Ping failed:', e);
+    }
+  };
+
   return (
     <div className="flex-1 flex flex-col h-screen overflow-hidden relative">
       <div className="flex-1 overflow-y-auto p-12 custom-scrollbar pb-32">
@@ -45,19 +58,28 @@ const Analytics = () => {
             <p className="text-xs text-gray-500 font-medium mt-1 tracking-widest uppercase">Intelligence & Event Monitoring</p>
           </div>
           
-          <div className="flex gap-2 glass p-1.5 rounded-2xl">
+          <div className="flex items-center gap-6">
             <button 
-              onClick={() => setActiveSubTab('analytics')}
-              className={`px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${activeSubTab === 'analytics' ? 'bg-blue-500 text-white shadow-[0_5px_15px_rgba(59,130,246,0.3)]' : 'text-gray-500 hover:text-white'}`}
+              onClick={sendPing}
+              className="p-3 glass rounded-xl text-blue-500 hover:bg-blue-500/10 transition-all border-white/5"
+              title="Send Diagnostic Ping"
             >
-              Network Stats
+              <Zap className="w-5 h-5" />
             </button>
-            <button 
-              onClick={() => setActiveSubTab('logs')}
-              className={`px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${activeSubTab === 'logs' ? 'bg-blue-500 text-white shadow-[0_5px_15px_rgba(59,130,246,0.3)]' : 'text-gray-500 hover:text-white'}`}
-            >
-              Live Event Feed
-            </button>
+            <div className="flex gap-2 glass p-1.5 rounded-2xl">
+              <button 
+                onClick={() => setActiveSubTab('analytics')}
+                className={`px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${activeSubTab === 'analytics' ? 'bg-blue-500 text-white shadow-[0_5px_15px_rgba(59,130,246,0.3)]' : 'text-gray-500 hover:text-white'}`}
+              >
+                Network Stats
+              </button>
+              <button 
+                onClick={() => setActiveSubTab('logs')}
+                className={`px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${activeSubTab === 'logs' ? 'bg-blue-500 text-white shadow-[0_5px_15px_rgba(59,130,246,0.3)]' : 'text-gray-500 hover:text-white'}`}
+              >
+                Live Event Feed
+              </button>
+            </div>
           </div>
         </header>
 

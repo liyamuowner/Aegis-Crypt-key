@@ -4,8 +4,8 @@ import Dashboard from './components/Dashboard';
 import Analytics from './components/Analytics';
 import LoginOverlay from './components/LoginOverlay';
 import config from './config.json';
-
-
+import { db } from './lib/firebase';
+import { collection, addDoc, Timestamp } from 'firebase/firestore';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -26,10 +26,20 @@ function App() {
     }, 100);
   };
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     setIsAuthenticated(true);
     localStorage.setItem('aegis_auth', 'true');
     logToConsole(config.alertMessages.loginSuccess, 'success');
+    
+    // Log Global Event
+    try {
+      await addDoc(collection(db, 'logs'), {
+        msg: 'ADMIN: Session Initialized',
+        type: 'success',
+        time: Timestamp.now(),
+        key: 'ADMIN-ROOT'
+      });
+    } catch(e) {}
   };
 
 

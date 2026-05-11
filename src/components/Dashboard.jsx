@@ -588,6 +588,16 @@ const Dashboard = ({ logToConsole, logs }) => {
 
                   <div className="flex items-center justify-between py-5 border-b border-white/5 group hover:bg-white/[0.02] transition-all px-2 rounded-xl">
                     <div className="flex items-center gap-5">
+                      <div className="p-3.5 bg-emerald-500/10 text-emerald-500 rounded-full shrink-0 shadow-[0_0_15px_rgba(16,185,129,0.2)]"><Activity className="w-5 h-5" /></div>
+                      <div>
+                        <p className="text-[9px] font-black text-gray-500 uppercase tracking-[0.2em]">Last Active Connection</p>
+                        <p className="text-sm font-bold text-white mt-1.5">{selectedNode.lastSeen ? selectedNode.lastSeen.toDate().toLocaleString() : 'Never Connected'}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between py-5 border-b border-white/5 group hover:bg-white/[0.02] transition-all px-2 rounded-xl">
+                    <div className="flex items-center gap-5">
                       <div className="p-3.5 bg-amber-500/10 text-amber-500 rounded-full shrink-0 shadow-[0_0_15px_rgba(245,158,11,0.2)]"><Clock className="w-5 h-5" /></div>
                       <div>
                         <p className="text-[9px] font-black text-gray-500 uppercase tracking-[0.2em]">Lifecycle Details</p>

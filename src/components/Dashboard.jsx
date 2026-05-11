@@ -331,35 +331,35 @@ const Dashboard = ({ logToConsole, logs }) => {
         </div>
       </div>
 
-      {/* Details Side Panel */}
+      {/* Details Modal */}
       <AnimatePresence>
         {selectedNode && (
-          <>
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
             <motion.div 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setSelectedNode(null)}
-              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100]"
+              className="absolute inset-0 bg-black/60 backdrop-blur-sm"
             />
-            <motion.aside 
-              initial={{ x: '100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: '100%' }}
-              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="fixed top-0 right-0 h-full w-[450px] glass border-l border-white/10 z-[101] p-10 flex flex-col"
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+              className="relative w-full max-w-[450px] max-h-[90vh] glass border border-white/10 rounded-[3rem] shadow-2xl z-[101] p-8 md:p-10 flex flex-col"
             >
-              <div className="flex justify-between items-center mb-12">
+              <div className="flex justify-between items-center mb-8 shrink-0">
                 <h2 className="text-2xl font-black tracking-tighter uppercase">Node <span className="text-blue-500">Intel</span></h2>
                 <button onClick={() => setSelectedNode(null)} className="p-3 hover:bg-white/5 rounded-xl transition-all text-gray-500">
                   <X className="w-6 h-6" />
                 </button>
               </div>
 
-              <div className="space-y-8 flex-1 overflow-y-auto pr-4">
-                <div className="p-8 bg-blue-500/5 rounded-[2.5rem] border border-blue-500/10 mb-8">
+              <div className="space-y-6 flex-1 overflow-y-auto pr-2 scrollbar-hide">
+                <div className="p-6 bg-blue-500/5 rounded-[2rem] border border-blue-500/10">
                   <p className="text-[9px] font-black text-blue-500 uppercase tracking-[0.2em] mb-4">Core Identity</p>
-                  <h3 className="text-3xl font-mono font-black text-white break-all">{selectedNode.key}</h3>
+                  <h3 className="text-2xl md:text-3xl font-mono font-black text-white break-all">{selectedNode.key}</h3>
                   <div className="mt-4 flex items-center gap-3">
                     <span className="px-3 py-1 bg-white/5 rounded-lg text-[9px] font-black text-gray-400 uppercase tracking-widest">{selectedNode.type}</span>
                     <span className={`px-3 py-1 ${selectedNode.isActive ? 'bg-emerald-500/10 text-emerald-500' : 'bg-red-500/10 text-red-500'} rounded-lg text-[9px] font-black uppercase tracking-widest border border-current/10`}>
@@ -375,20 +375,20 @@ const Dashboard = ({ logToConsole, logs }) => {
                   <DetailBox label="Global IP" value={selectedNode.ip || 'N/A'} color="text-blue-400" />
                 </div>
 
-                <div className="p-8 glass rounded-[2.5rem] space-y-6">
+                <div className="p-6 glass rounded-[2rem] space-y-6">
                   <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Activity Intelligence</h4>
                   <ActivityItem label="Last Synchronization" value={selectedNode.lastSeen ? selectedNode.lastSeen.toDate().toLocaleString() : 'Never'} color="bg-blue-500/20" />
                   <ActivityItem label="Neural Handshake" value="Verified AES-256-GCM Tunnel Active" color="bg-emerald-500/20" />
                 </div>
 
-                <div className="p-6 bg-amber-500/5 rounded-3xl border border-amber-500/10">
+                <div className="p-5 bg-amber-500/5 rounded-3xl border border-amber-500/10">
                   <p className="text-[8px] text-amber-500/60 leading-relaxed font-bold uppercase tracking-widest">
-                    <span className="text-amber-500">CAUTION:</span> Revoking access will immediately terminate all active sessions for this identifier.
+                    <span className="text-amber-500">CAUTION:</span> Revoking access terminates all sessions.
                   </p>
                 </div>
               </div>
 
-              <div className="mt-auto pt-8 border-t border-white/5 flex gap-4">
+              <div className="mt-6 pt-6 border-t border-white/5 flex gap-4 shrink-0">
                 <button 
                   onClick={() => toggleKey(selectedNode.id, selectedNode.isActive)}
                   className={`flex-1 py-4 ${selectedNode.isActive ? 'bg-red-500/10 text-red-500 border-red-500/20 hover:bg-red-500/20' : 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20 hover:bg-emerald-500/20'} rounded-2xl font-black text-[10px] tracking-widest uppercase border transition-all`}
@@ -402,10 +402,11 @@ const Dashboard = ({ logToConsole, logs }) => {
                   <Trash2 className="w-5 h-5" />
                 </button>
               </div>
-            </motion.aside>
-          </>
+            </motion.div>
+          </div>
         )}
       </AnimatePresence>
+
     </div>
   );
 };

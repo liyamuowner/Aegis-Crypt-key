@@ -563,21 +563,6 @@ const Dashboard = ({ logToConsole, logs }) => {
                 <div className="flex flex-col">
                   <div className="flex items-center justify-between py-5 border-b border-white/5 group hover:bg-white/[0.02] transition-all px-2 rounded-xl">
                     <div className="flex items-center gap-5 min-w-0 flex-1">
-                      <div className="p-3.5 bg-blue-500/10 text-blue-500 rounded-full shrink-0 shadow-[0_0_15px_rgba(59,130,246,0.2)]"><Globe className="w-5 h-5" /></div>
-                      <div className="min-w-0 pr-4">
-                        <p className="text-[9px] font-black text-gray-500 uppercase tracking-[0.2em]">Network Identity</p>
-                        <p className="text-sm font-bold text-white mt-1.5 truncate">{selectedNode.ip || 'N/A'} <span className="text-gray-600 text-xs font-mono ml-2">({selectedNode.platform || 'UNKNOWN'})</span></p>
-                      </div>
-                    </div>
-                    {selectedNode.ip && selectedNode.ip !== 'N/A' && (
-                      <button onClick={() => { navigator.clipboard.writeText(selectedNode.ip); logToConsole('IP copied to clipboard', 'info'); }} className="p-3 bg-white/5 hover:bg-white/10 rounded-full text-gray-500 hover:text-white transition-colors">
-                        <Copy className="w-4 h-4" />
-                      </button>
-                    )}
-                  </div>
-
-                  <div className="flex items-center justify-between py-5 border-b border-white/5 group hover:bg-white/[0.02] transition-all px-2 rounded-xl">
-                    <div className="flex items-center gap-5 min-w-0 flex-1">
                       <div className="p-3.5 bg-purple-500/10 text-purple-500 rounded-full shrink-0 shadow-[0_0_15px_rgba(168,85,247,0.2)]"><Cpu className="w-5 h-5" /></div>
                       <div className="min-w-0 pr-4">
                         <p className="text-[9px] font-black text-gray-500 uppercase tracking-[0.2em]">Hardware Signature</p>

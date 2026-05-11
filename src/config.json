@@ -1,0 +1,17 @@
+{
+  "appName": "Aegis Suite",
+  "version": "2.4.0",
+  "securityLevel": "High-Entropy",
+  "systemHealth": 98,
+  "theme": {
+    "primary": "#3b82f6",
+    "secondary": "#1d4ed8",
+    "accent": "#10b981",
+    "background": "#020204"
+  },
+  "alertMessages": {
+    "loginSuccess": "Administrator authenticated. Neural link stable.",
+    "loginFailure": "Unauthorized access attempt blocked.",
+    "purgeWarning": "Identifier purge is irreversible."
+  }
+}

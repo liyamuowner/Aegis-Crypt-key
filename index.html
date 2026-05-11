@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aegis Crypt | Admin Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Outfit', sans-serif; background-color: #050507; color: white; }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .neon-glow { box-shadow: 0 0 20px rgba(59, 130, 246, 0.3); }
+        .gradient-text { background: linear-gradient(135deg, #60a5fa, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    </style>
+</head>
+<body class="min-h-screen p-8">
+    <div class="max-w-6xl mx-auto">
+        <!-- Header -->
+        <header class="flex justify-between items-center mb-12">
+            <div>
+                <h1 class="text-3xl font-bold tracking-tight">AEGIS <span class="text-blue-500">ADMIN</span></h1>
+                <p class="text-gray-500 mt-1">License Management & Key Generation System</p>
+            </div>
+            <div class="flex gap-4">
+                <div class="glass px-4 py-2 rounded-xl border border-blue-500/20">
+                    <span class="text-xs text-gray-500 uppercase block">Connected Project</span>
+                    <span id="displayProjectId" class="text-sm font-bold text-blue-400">LOADING...</span>
+                </div>
+                <button onclick="testFirebase()" class="glass px-4 py-2 rounded-xl border border-emerald-500/20 hover:bg-emerald-500/10 transition-all text-xs font-bold text-emerald-400">
+                    TEST CONNECTION
+                </button>
+            </div>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Key Generator -->
+            <div class="lg:col-span-1 flex flex-col gap-6">
+                <div class="glass p-8 rounded-3xl border-blue-500/10">
+                    <h2 class="text-xl font-bold mb-6 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path></svg>
+                        Key Generator
+                    </h2>
+                    
+                    <div class="space-y-6">
+                        <div>
+                            <label class="text-xs font-bold text-gray-500 uppercase tracking-widest block mb-2 ml-1">Package Type</label>
+                            <select id="packageType" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 outline-none focus:border-blue-500 transition-all text-sm">
+                                <option value="7">7 Days (Standard)</option>
+                                <option value="30">30 Days (Premium)</option>
+                                <option value="90">90 Days (Elite)</option>
+                                <option value="3650">Lifetime (Legendary)</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="text-xs font-bold text-gray-500 uppercase tracking-widest block mb-2 ml-1">Generated Key</label>
+                            <div class="flex gap-2">
+                                <input id="generatedKey" type="text" readonly placeholder="Click Generate..." class="flex-1 bg-black/40 border border-white/5 rounded-xl px-4 py-4 outline-none text-blue-400 font-mono tracking-widest text-center">
+                                <button onclick="copyKey()" class="px-4 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl transition-all">
+                                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
+                                </button>
+                            </div>
+                        </div>
+
+                        <button onclick="generateAndPushKey()" id="genBtn" class="w-full py-4 bg-blue-600 hover:bg-blue-500 rounded-xl font-bold transition-all neon-glow flex items-center justify-center gap-3">
+                            <span id="btnText">GENERATE & SYNC</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="glass p-6 rounded-2xl border-white/5 text-xs text-gray-500 leading-relaxed">
+                    <p class="font-bold text-gray-400 mb-2 uppercase tracking-widest">Administrator Note</p>
+                    All generated keys are pushed directly to the Firestore 'licenses' collection. Ensure your Firebase rules allow write access from this domain.
+                </div>
+            </div>
+
+            <!-- License List -->
+            <div class="lg:col-span-2">
+                <div class="glass rounded-3xl border-white/5 overflow-hidden">
+                    <div class="p-8 border-b border-white/5 flex justify-between items-center">
+                        <h2 class="text-xl font-bold">Active Licenses</h2>
+                        <button onclick="fetchLicenses()" class="p-2 hover:bg-white/5 rounded-lg transition-colors">
+                            <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                        </button>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-white/2">
+                                    <th class="p-4 text-xs font-bold text-gray-500 uppercase">Key</th>
+                                    <th class="p-4 text-xs font-bold text-gray-500 uppercase">Status</th>
+                                    <th class="p-4 text-xs font-bold text-gray-500 uppercase">Hardware ID</th>
+                                    <th class="p-4 text-xs font-bold text-gray-500 uppercase">Expiry</th>
+                                </tr>
+                            </thead>
+                            <tbody id="licenseTable">
+                                <!-- Loaded via JS -->
+                                <tr><td colspan="4" class="p-8 text-center text-gray-600">Initializing Database...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, setDoc, updateDoc, deleteDoc, doc, Timestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCKnhEf77Kx3R9bVh0fBdgxIPXHX02gZ4c",
+            authDomain: "aegis-crypt.firebaseapp.com",
+            databaseURL: "https://aegis-crypt-default-rtdb.firebaseio.com",
+            projectId: "aegis-crypt",
+            storageBucket: "aegis-crypt.firebasestorage.app",
+            messagingSenderId: "849684986028",
+            appId: "1:849684986028:web:38d693142dd944964ec709"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // UI Diagnostics
+        document.getElementById('displayProjectId').innerText = firebaseConfig.projectId.toUpperCase();
+
+        window.testFirebase = async () => {
+            try {
+                await getDocs(collection(db, "licenses"));
+                alert(`SUCCESS: Connected to project "${firebaseConfig.projectId}".\nIf you don't see data in the console, you are logged into the WRONG Firebase account.`);
+            } catch (e) {
+                alert(`CONNECTION FAILED: ${e.message}`);
+            }
+        }
+
+        window.copyKey = () => {
+            const key = document.getElementById('generatedKey').value;
+            if (!key) return;
+            navigator.clipboard.writeText(key);
+            alert('Key copied to clipboard!');
+        }
+
+        window.generateAndPushKey = async () => {
+            const btn = document.getElementById('genBtn');
+            const btnText = document.getElementById('btnText');
+            const packageType = document.getElementById('packageType').value;
+            
+            // Generate random key
+            const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+            let key = 'AEGIS-';
+            for (let i = 0; i < 12; i++) {
+                if (i > 0 && i % 4 === 0) key += '-';
+                key += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+
+            document.getElementById('generatedKey').value = key;
+            
+            btn.disabled = true;
+            btnText.innerText = 'SYNCING...';
+
+            try {
+                const expiry = new Date();
+                expiry.setDate(expiry.getDate() + parseInt(packageType));
+                
+                const typeLabel = packageType == "7" ? "7-Day Package" : 
+                                packageType == "30" ? "30-Day Package" : 
+                                packageType == "90" ? "90-Day Package" : "Lifetime Access";
+
+                await setDoc(doc(db, "licenses", key), {
+                    isActive: true,
+                    type: typeLabel,
+                    expiryDate: Timestamp.fromDate(expiry),
+                    hwid: null,
+                    key: key
+                });
+
+                fetchLicenses();
+                alert('Key Generated & Pushed to Firebase!');
+            } catch (e) {
+                console.error(e);
+                alert(`FIREBASE ERROR: ${e.message}\n\nCheck if you have created the "Firestore Database" in your Firebase console and set Rules to "Test Mode".`);
+            } finally {
+                btn.disabled = false;
+                btnText.innerText = 'GENERATE & SYNC';
+            }
+        }
+
+        window.revokeLicense = async (key, currentStatus) => {
+            if (!confirm(`Are you sure you want to ${currentStatus ? 'REVOKE' : 'REACTIVATE'} this license?`)) return;
+            try {
+                await updateDoc(doc(db, "licenses", key), { isActive: !currentStatus });
+                fetchLicenses();
+            } catch (e) { alert('Error updating license'); }
+        }
+
+        window.deleteLicense = async (key) => {
+            if (!confirm('PERMANENTLY DELETE this license? This cannot be undone.')) return;
+            try {
+                await deleteDoc(doc(db, "licenses", key));
+                fetchLicenses();
+            } catch (e) { alert('Error deleting license'); }
+        }
+
+        window.fetchLicenses = async () => {
+            const table = document.getElementById('licenseTable');
+            table.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-gray-600">Refreshing...</td></tr>';
+            
+            try {
+                const querySnapshot = await getDocs(collection(db, "licenses"));
+                table.innerHTML = '';
+                
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    const expiry = data.expiryDate.toDate().toLocaleDateString();
+                    
+                    const row = `
+                        <tr class="border-b border-white/5 hover:bg-white/2 transition-colors">
+                            <td class="p-4">
+                                <div class="font-mono text-sm text-blue-400">${data.key}</div>
+                                <div class="text-[10px] text-gray-600 uppercase mt-1 font-bold">${data.type}</div>
+                            </td>
+                            <td class="p-4">
+                                <button onclick="revokeLicense('${data.key}', ${data.isActive})" class="px-3 py-1 rounded-full text-[10px] font-bold transition-all ${data.isActive ? 'bg-emerald-500/10 text-emerald-400 hover:bg-red-500/10 hover:text-red-400' : 'bg-red-500/10 text-red-400 hover:bg-emerald-500/10 hover:text-emerald-400'}">
+                                    ${data.isActive ? 'ACTIVE (Revoke)' : 'REVOKED (Activate)'}
+                                </button>
+                            </td>
+                            <td class="p-4">
+                                <div class="text-xs font-mono text-gray-500">${data.hwid || '<span class="text-gray-700 italic">Available</span>'}</div>
+                            </td>
+                            <td class="p-4 text-xs text-gray-400 font-mono">${expiry}</td>
+                            <td class="p-4 text-right">
+                                <button onclick="deleteLicense('${data.key}')" class="p-2 hover:bg-red-500/10 rounded-lg text-gray-600 hover:text-red-400 transition-colors">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                    table.innerHTML += row;
+                });
+            } catch (e) {
+                table.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-red-400">Failed to load licenses. Check Firestore Rules.</td></tr>';
+            }
+        }
+
+        // Initial Load
+        fetchLicenses();
+    </script>
+</body>
+</html>

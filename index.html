@@ -10,11 +10,20 @@
         body { font-family: 'Outfit', sans-serif; background-color: #050507; color: white; }
         .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.05); }
         .neon-glow { box-shadow: 0 0 20px rgba(59, 130, 246, 0.3); }
-        .gradient-text { background: linear-gradient(135deg, #60a5fa, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        #loginOverlay { background: #050507; z-index: 100; transition: all 0.5s ease; }
     </style>
 </head>
 <body class="min-h-screen p-8">
-    <div class="max-w-6xl mx-auto">
+    <!-- Login Overlay -->
+    <div id="loginOverlay" class="fixed inset-0 flex items-center justify-center p-6">
+        <div class="glass p-10 rounded-3xl w-full max-w-md border-blue-500/20">
+            <h2 class="text-2xl font-bold mb-6 text-center">ADMIN <span class="text-blue-500">ACCESS</span></h2>
+            <input id="masterPassword" type="password" placeholder="Enter Master Password" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-4 outline-none focus:border-blue-500 mb-6 text-center tracking-widest">
+            <button onclick="checkPassword()" class="w-full py-4 bg-blue-600 hover:bg-blue-500 rounded-xl font-bold transition-all neon-glow">UNLOCK SYSTEM</button>
+        </div>
+    </div>
+
+    <div id="adminContent" class="max-w-6xl mx-auto opacity-0 pointer-events-none">
         <!-- Header -->
         <header class="flex justify-between items-center mb-12">
             <div>
@@ -104,6 +113,8 @@
         </div>
     </div>
 
+    </div> <!-- End adminContent -->
+
     <!-- Firebase SDKs -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -121,6 +132,22 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
+
+        // Security
+        window.checkPassword = () => {
+            const pass = document.getElementById('masterPassword').value;
+            if (pass === 'AegisAdmin2026') {
+                document.getElementById('loginOverlay').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('loginOverlay').style.display = 'none';
+                    document.getElementById('adminContent').style.opacity = '1';
+                    document.getElementById('adminContent').style.pointerEvents = 'auto';
+                    fetchLicenses();
+                }, 500);
+            } else {
+                alert('Invalid Master Password');
+            }
+        }
 
         // UI Diagnostics
         document.getElementById('displayProjectId').innerText = firebaseConfig.projectId.toUpperCase();

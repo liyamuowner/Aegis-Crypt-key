@@ -525,28 +525,81 @@ const Dashboard = ({ logToConsole, logs }) => {
                 </button>
               </div>
 
-              <div className="space-y-6 flex-1 overflow-y-auto pr-2 custom-scrollbar">
-                <div className="p-8 bg-blue-500/5 rounded-[2rem] border border-blue-500/10 text-center">
-                  <p className="text-[9px] font-black text-blue-500 uppercase tracking-[0.2em] mb-4">Core Identity</p>
-                  <h3 className="text-3xl font-mono font-black text-white break-all mb-4">{selectedNode.key}</h3>
-                  <div className="flex justify-center items-center gap-3">
-                    <span className="px-4 py-1.5 bg-white/5 rounded-full text-[10px] font-black text-gray-300 uppercase tracking-widest">{selectedNode.type}</span>
-                    <span className={`px-4 py-1.5 ${selectedNode.isActive ? 'bg-emerald-500/10 text-emerald-500' : 'bg-red-500/10 text-red-500'} rounded-full text-[10px] font-black uppercase tracking-widest`}>
-                      {selectedNode.isActive ? 'Active' : 'Revoked'}
-                    </span>
+              <div className="space-y-4 flex-1 overflow-y-auto pr-2 custom-scrollbar">
+                <div className="p-8 bg-gradient-to-br from-blue-500/10 to-blue-700/5 rounded-3xl border border-blue-500/20 relative overflow-hidden group">
+                  <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                    <ShieldCheck className="w-24 h-24 text-blue-500" />
+                  </div>
+                  <div className="relative z-10 flex flex-col items-center text-center">
+                    <p className="text-[10px] font-black text-blue-400 uppercase tracking-widest mb-3">Core Identity</p>
+                    <div className="flex items-center gap-3 mb-6 bg-black/40 px-6 py-3 rounded-2xl border border-white/5">
+                      <h3 className="text-xl md:text-2xl font-mono font-bold text-white tracking-wider">{selectedNode.key}</h3>
+                      <button 
+                        onClick={() => {
+                          navigator.clipboard.writeText(selectedNode.key);
+                          logToConsole('Identifier copied to clipboard', 'info');
+                        }}
+                        className="p-2 hover:bg-white/10 rounded-xl transition-all text-gray-400 hover:text-white"
+                      >
+                        <Copy className="w-4 h-4" />
+                      </button>
+                    </div>
+                    <div className="flex justify-center items-center gap-3">
+                      <span className="px-4 py-1.5 bg-blue-500/20 text-blue-400 rounded-full text-[10px] font-black uppercase tracking-widest border border-blue-500/30">{selectedNode.type}</span>
+                      <span className={`px-4 py-1.5 ${selectedNode.isActive ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' : 'bg-red-500/20 text-red-400 border-red-500/30'} border rounded-full text-[10px] font-black uppercase tracking-widest shadow-[0_0_15px_currentColor]`}>
+                        {selectedNode.isActive ? 'Active' : 'Revoked'}
+                      </span>
+                    </div>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                  <DetailBox label="Hardware SIG" value={selectedNode.hwid || 'NOT LINKED'} mono />
-                  <DetailBox label="Registry End" value={`${selectedNode.expiryDate?.toDate().toLocaleDateString()} (${getDaysRemaining(selectedNode.expiryDate)} Days Left)`} />
-                  <DetailBox label="Platform" value={selectedNode.platform || 'UNKNOWN'} color="text-blue-400" />
-                  <DetailBox label="Global IP" value={selectedNode.ip || 'N/A'} color="text-blue-400" />
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between p-5 glass rounded-2xl border-white/5 group hover:bg-white/5 transition-all">
+                    <div className="flex items-center gap-4">
+                      <div className="p-3 bg-blue-500/10 text-blue-500 rounded-xl"><Globe className="w-5 h-5" /></div>
+                      <div>
+                        <p className="text-[9px] font-black text-gray-500 uppercase tracking-[0.2em]">Network Identity (IP)</p>
+                        <p className="text-sm font-bold text-white mt-1">{selectedNode.ip || 'N/A'} <span className="text-gray-600 text-xs font-mono ml-2">({selectedNode.platform || 'UNKNOWN'})</span></p>
+                      </div>
+                    </div>
+                    {selectedNode.ip && selectedNode.ip !== 'N/A' && (
+                      <button 
+                        onClick={() => {
+                          navigator.clipboard.writeText(selectedNode.ip);
+                          logToConsole('IP Address copied to clipboard', 'info');
+                        }} 
+                        className="p-2 text-gray-500 hover:text-white transition-colors"
+                      >
+                        <Copy className="w-4 h-4" />
+                      </button>
+                    )}
+                  </div>
+
+                  <div className="flex items-center justify-between p-5 glass rounded-2xl border-white/5 group hover:bg-white/5 transition-all">
+                    <div className="flex items-center gap-4">
+                      <div className="p-3 bg-purple-500/10 text-purple-500 rounded-xl"><Cpu className="w-5 h-5" /></div>
+                      <div>
+                        <p className="text-[9px] font-black text-gray-500 uppercase tracking-[0.2em]">Hardware Signature</p>
+                        <p className="text-xs font-mono font-bold text-gray-300 mt-1">{selectedNode.hwid || 'NOT LINKED'}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between p-5 glass rounded-2xl border-white/5 group hover:bg-white/5 transition-all">
+                    <div className="flex items-center gap-4">
+                      <div className="p-3 bg-amber-500/10 text-amber-500 rounded-xl"><Clock className="w-5 h-5" /></div>
+                      <div>
+                        <p className="text-[9px] font-black text-gray-500 uppercase tracking-[0.2em]">Lifecycle</p>
+                        <p className="text-sm font-bold text-white mt-1">{selectedNode.expiryDate?.toDate().toLocaleDateString()} <span className={`text-xs ml-2 font-black ${getDaysRemaining(selectedNode.expiryDate) > 3 ? 'text-blue-400' : 'text-red-500 animate-pulse'}`}>({getDaysRemaining(selectedNode.expiryDate)} Days Left)</span></p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
-                <div className="p-6 bg-amber-500/5 rounded-3xl border border-amber-500/10 mt-6">
-                  <p className="text-[9px] text-amber-500/80 leading-relaxed font-bold uppercase tracking-widest text-center">
-                    <span className="text-amber-500 block mb-1">CAUTION</span> Revoking access terminates all live sessions.
+                <div className="p-4 bg-red-500/5 rounded-2xl border border-red-500/10 flex items-center gap-4 mt-2">
+                  <div className="p-2 bg-red-500/10 text-red-500 rounded-lg"><Lock className="w-4 h-4" /></div>
+                  <p className="text-[9px] text-red-400/80 leading-relaxed font-bold uppercase tracking-widest flex-1">
+                    Revoking access terminates all live sessions immediately.
                   </p>
                 </div>
               </div>

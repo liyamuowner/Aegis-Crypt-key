@@ -186,6 +186,40 @@ const Dashboard = ({ logToConsole, logs }) => {
           </div>
         </header>
 
+        {/* System Authority Status */}
+        <section className="mb-12 glass p-8 rounded-[3rem] border-white/5 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8">
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-emerald-500"></div>
+          <div className="flex items-center gap-6">
+            <div className="p-4 bg-blue-500/10 text-blue-500 rounded-[2rem] shadow-[0_0_20px_rgba(59,130,246,0.2)]">
+              <ShieldCheck className="w-8 h-8" />
+            </div>
+            <div>
+              <h3 className="text-xl font-black text-white uppercase tracking-tighter">Authority <span className="text-blue-500">Authenticated</span></h3>
+              <p className="text-[9px] text-emerald-500 font-bold uppercase tracking-[0.2em] mt-1 flex items-center gap-2">
+                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></div>
+                Bridge Connection: Optimized
+              </p>
+            </div>
+          </div>
+          
+          <div className="flex gap-6 items-center">
+            <div className="text-right">
+              <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-1">Global Instance ID</p>
+              <p className="text-xs font-mono font-bold text-white uppercase tracking-wider opacity-60">AEGIS-SVR-NODE-01</p>
+            </div>
+            <div className="h-10 w-px bg-white/10 hidden md:block"></div>
+            <div className="flex items-center gap-4">
+               <div className="text-right hidden sm:block">
+                  <p className="text-[9px] font-black text-gray-500 uppercase tracking-widest mb-1">Latency</p>
+                  <p className="text-xs font-bold text-blue-400">14ms</p>
+               </div>
+               <div className="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center">
+                  <Activity className="w-6 h-6 text-blue-500/50" />
+               </div>
+            </div>
+          </div>
+        </section>
+
         {/* Top Stats */}
         <section className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
           <StatCard icon={<Key />} label="Total Licenses" value={stats.total} color="blue" />

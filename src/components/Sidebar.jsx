@@ -1,7 +1,7 @@
 import React from 'react';
 import { LayoutDashboard, Users, BarChart3, Settings, LogOut, Shield } from 'lucide-react';
 
-const Sidebar = ({ onLogout, projectId, appName, health }) => {
+const Sidebar = ({ onLogout, projectId, appName, health, activeTab, setActiveTab }) => {
   return (
     <aside className="w-80 glass border-r border-white/5 flex flex-col p-8 z-50">
       <div className="flex items-center gap-4 mb-16 px-4">
@@ -15,15 +15,17 @@ const Sidebar = ({ onLogout, projectId, appName, health }) => {
       </div>
 
       <nav className="flex-1 space-y-2">
-        <button className="sidebar-item active w-full flex items-center gap-4 px-6 py-4 rounded-2xl text-sm font-bold text-blue-500">
+        <button 
+          onClick={() => setActiveTab('registry')}
+          className={`sidebar-item w-full flex items-center gap-4 px-6 py-4 rounded-2xl text-sm font-bold transition-all ${activeTab === 'registry' ? 'active text-blue-500 bg-blue-500/10' : 'text-gray-500 hover:text-gray-300'}`}
+        >
           <LayoutDashboard className="w-5 h-5" />
-          Dashboard Overview
-        </button>
-        <button className="sidebar-item w-full flex items-center gap-4 px-6 py-4 rounded-2xl text-sm font-bold text-gray-500 hover:text-gray-300">
-          <Users className="w-5 h-5" />
           Registry Authority
         </button>
-        <button className="sidebar-item w-full flex items-center gap-4 px-6 py-4 rounded-2xl text-sm font-bold text-gray-500 hover:text-gray-300">
+        <button 
+          onClick={() => setActiveTab('analytics')}
+          className={`sidebar-item w-full flex items-center gap-4 px-6 py-4 rounded-2xl text-sm font-bold transition-all ${activeTab === 'analytics' ? 'active text-blue-500 bg-blue-500/10' : 'text-gray-500 hover:text-gray-300'}`}
+        >
           <BarChart3 className="w-5 h-5" />
           Analytics & Logs
         </button>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Sidebar from './components/Sidebar';
 import Dashboard from './components/Dashboard';
+import Analytics from './components/Analytics';
 import LoginOverlay from './components/LoginOverlay';
 import config from './config.json';
 
@@ -8,6 +9,7 @@ import config from './config.json';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [activeTab, setActiveTab] = useState('registry');
   const [logs, setLogs] = useState([
     { time: new Date(), msg: '[SYSTEM] Initializing secure channel...', type: 'system' },
     { time: new Date(), msg: '[SYSTEM] Neural link established.', type: 'system' },
@@ -55,15 +57,21 @@ function App() {
         <LoginOverlay onLogin={handleLogin} />
       ) : (
         <div className="flex min-h-screen">
-          <Sidebar onLogout={handleLogout} projectId={import.meta.env.VITE_FIREBASE_PROJECT_ID} appName={config.appName} health={config.systemHealth} />
+          <Sidebar 
+            onLogout={handleLogout} 
+            projectId={import.meta.env.VITE_FIREBASE_PROJECT_ID} 
+            appName={config.appName} 
+            health={config.systemHealth}
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+          />
 
-          <Dashboard logToConsole={logToConsole} logs={logs} />
+          {activeTab === 'registry' ? (
+            <Dashboard logToConsole={logToConsole} logs={logs} />
+          ) : (
+            <Analytics logs={logs} />
+          )}
 
-          
-          {/* We port the console render here or use a portal, 
-              but for now Dashboard has a div with id 'systemConsole'.
-              I will update Dashboard.jsx to render the logs.
-          */}
         </div>
       )}
     </div>

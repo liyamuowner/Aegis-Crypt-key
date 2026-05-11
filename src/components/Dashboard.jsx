@@ -205,7 +205,6 @@ const Dashboard = ({ logToConsole, logs }) => {
             </button>
           </div>
 
-          <div className="flex gap-4">
           <div className="flex gap-4 items-center">
             <div className="relative">
               <button 
@@ -243,6 +242,7 @@ const Dashboard = ({ logToConsole, logs }) => {
                 )}
               </AnimatePresence>
             </div>
+            
             <div className="relative">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
               <input 

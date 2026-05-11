@@ -407,13 +407,13 @@ const Dashboard = ({ logToConsole, logs }) => {
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="relative w-full max-w-[500px] glass border border-white/10 rounded-[3rem] p-12 shadow-2xl flex flex-col"
+              className="relative w-full max-w-[500px] max-h-[90vh] glass border border-white/10 rounded-[3rem] p-8 md:p-12 shadow-2xl flex flex-col"
             >
-              <button onClick={() => setShowForgeModal(false)} className="absolute top-8 right-8 p-3 hover:bg-white/5 rounded-xl transition-all text-gray-500">
+              <button onClick={() => setShowForgeModal(false)} className="absolute top-6 right-6 p-3 hover:bg-white/5 rounded-xl transition-all text-gray-500 z-50">
                 <X className="w-6 h-6" />
               </button>
               
-              <div className="flex items-center gap-5 mb-10">
+              <div className="flex items-center gap-5 mb-10 shrink-0">
                 <div className="w-14 h-14 bg-blue-500/10 rounded-2xl flex items-center justify-center text-blue-500 shadow-[0_0_30px_rgba(59,130,246,0.2)]">
                   <Key className="w-6 h-6" />
                 </div>
@@ -423,7 +423,7 @@ const Dashboard = ({ logToConsole, logs }) => {
                 </div>
               </div>
 
-              <div className="space-y-8">
+              <div className="space-y-8 flex-1 overflow-y-auto pr-2 custom-scrollbar">
                 <div>
                   <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-4 block">Select Authorization Tier</label>
                   <div className="grid grid-cols-2 gap-3">
@@ -516,9 +516,9 @@ const Dashboard = ({ logToConsole, logs }) => {
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="relative w-full max-w-[500px] glass border border-white/10 rounded-[3rem] shadow-2xl p-10 flex flex-col"
+              className="relative w-full max-w-[500px] max-h-[90vh] glass border border-white/10 rounded-[3rem] shadow-2xl p-8 md:p-10 flex flex-col"
             >
-              <div className="flex justify-between items-center mb-8">
+              <div className="flex justify-between items-center mb-8 shrink-0">
                 <h2 className="text-2xl font-black tracking-tighter uppercase">Node <span className="text-blue-500">Intel</span></h2>
                 <button onClick={() => setSelectedNode(null)} className="p-3 hover:bg-white/5 rounded-xl transition-all text-gray-500">
                   <X className="w-6 h-6" />

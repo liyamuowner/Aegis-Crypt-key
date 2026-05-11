@@ -151,7 +151,7 @@ const Dashboard = ({ logToConsole, logs }) => {
         <StatCard icon={<Key />} label="Total Licenses" value={stats.total} color="blue" />
         <StatCard icon={<ShieldCheck />} label="Active Nodes" value={stats.active} color="emerald" />
         <StatCard icon={<Lock />} label="Revoked Access" value={stats.revoked} color="red" />
-        <StatCard icon={<Activity />} label="Uptime Meta" value="99.9%" color="amber" />
+        <StatCard icon={<Activity />} label="Uptime Meta" value="99.9%" color="blue" />
       </section>
 
       {/* Workspace */}
@@ -210,15 +210,15 @@ const Dashboard = ({ logToConsole, logs }) => {
                       <tr 
                         key={l.id} 
                         onClick={() => setSelectedNode(l)}
-                        className="hover:bg-white/[0.02] transition-all group cursor-pointer"
+                        className="hover:bg-blue-500/5 transition-all duration-300 group cursor-pointer relative"
                       >
                         <td className="py-6 px-4">
                           <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-blue-500">
+                            <div className="w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center text-blue-500 group-hover:bg-blue-500/20 group-hover:scale-110 transition-all duration-300">
                                <Key className="w-4 h-4" />
                             </div>
                             <div>
-                              <div className="font-mono text-blue-400 text-sm font-bold">{l.key}</div>
+                              <div className="font-mono text-white group-hover:text-blue-400 transition-colors text-sm font-bold">{l.key}</div>
                               <div className="text-[9px] text-gray-500 font-bold uppercase">{l.type}</div>
                             </div>
                           </div>
@@ -295,9 +295,10 @@ const Dashboard = ({ logToConsole, logs }) => {
                     readOnly 
                     placeholder="AWAITING COMMAND" 
                     value={generatedKey}
-                    className="flex-1 px-6 py-4 rounded-2xl outline-none text-blue-400 font-mono tracking-widest text-center text-xs bg-black/40 border border-white/5"
+                    className="flex-1 px-6 py-4 rounded-2xl outline-none text-blue-400 font-mono tracking-widest text-center text-xs bg-black/40 border border-white/5 focus:border-blue-500/50 focus:bg-blue-500/5 transition-all"
                   />
                   <button 
+ 
                     onClick={() => {
                       if (!generatedKey) return;
                       navigator.clipboard.writeText(generatedKey);

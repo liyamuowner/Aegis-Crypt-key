@@ -95,9 +95,14 @@ const Dashboard = ({ logToConsole, logs }) => {
     
     const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
     let key = 'AEGIS-';
-    for (let i = 0; i < 12; i++) {
+    
+    // High-Entropy Cryptographically Secure Generation
+    const array = new Uint32Array(16);
+    window.crypto.getRandomValues(array);
+    
+    for (let i = 0; i < 16; i++) {
       if (i > 0 && i % 4 === 0) key += '-';
-      key += chars.charAt(Math.floor(Math.random() * chars.length));
+      key += chars.charAt(array[i] % chars.length);
     }
 
     let daysToAdd = packageType === 'custom' ? parseInt(customDays) || 1 : parseInt(packageType);

@@ -3,145 +3,196 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aegis Crypt | Admin Dashboard</title>
+    <title>Aegis Suite | Registry Authority</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;900&display=swap" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;900&display=swap');
-        body { font-family: 'Outfit', sans-serif; background-color: #050508; color: white; margin: 0; overflow-x: hidden; }
-        .glass { background: rgba(10, 10, 16, 0.8); backdrop-filter: blur(20px); border: 1px solid rgba(59, 130, 246, 0.1); }
-        .neon-glow { box-shadow: 0 0 30px rgba(37, 99, 235, 0.2); }
-        .tech-grid { 
-            background-image: radial-gradient(#1e40af 0.5px, transparent 0.5px); 
-            background-size: 40px 40px; 
-            opacity: 0.1;
+        body { font-family: 'Outfit', sans-serif; background-color: #020204; color: white; margin: 0; overflow-x: hidden; }
+        
+        .glass { background: rgba(10, 10, 16, 0.6); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .neon-glow { box-shadow: 0 0 30px rgba(37, 99, 235, 0.15); }
+        
+        /* Liquid Background */
+        .liquid-bg {
+            position: fixed;
+            inset: 0;
+            overflow: hidden;
+            z-index: -1;
+            background: #020204;
         }
-        .scanline {
-            width: 100%;
-            height: 2px;
-            background: rgba(59, 130, 246, 0.1);
+        .orb {
             position: absolute;
-            animation: scan 4s linear infinite;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.15;
+            animation: move 20s infinite alternate ease-in-out;
         }
-        @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
-        #loginOverlay { background: #050508; z-index: 1000; transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
-        input, select { transition: all 0.3s ease; }
-        input:focus, select:focus { border-color: #3b82f6 !important; box-shadow: 0 0 15px rgba(37, 99, 235, 0.2); }
+        @keyframes move {
+            from { transform: translate(-10%, -10%) scale(1); }
+            to { transform: translate(10%, 10%) scale(1.2); }
+        }
+
+        #loginOverlay { background: #020204; z-index: 1000; transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
+        
+        input, select { 
+            background: rgba(0, 0, 0, 0.4) !important;
+            border: 1px solid rgba(255, 255, 255, 0.05) !important;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        input:focus, select:focus { 
+            border-color: rgba(59, 130, 246, 0.5) !important; 
+            box-shadow: 0 0 20px rgba(37, 99, 235, 0.1);
+            background: rgba(0, 0, 0, 0.6) !important;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            box-shadow: 0 10px 30px rgba(37, 99, 235, 0.2);
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(37, 99, 235, 0.3);
+        }
+        
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
     </style>
 </head>
 <body class="min-h-screen">
-    <div class="fixed inset-0 tech-grid pointer-events-none"></div>
-    <div class="scanline pointer-events-none"></div>
+    <div class="liquid-bg">
+        <div class="orb w-[80%] h-[80%] bg-blue-600 top-[-20%] left-[-10%]"></div>
+        <div class="orb w-[70%] h-[70%] bg-blue-400 bottom-[-20%] right-[-10%]" style="animation-delay: -5s;"></div>
+    </div>
 
     <!-- Login Overlay -->
     <div id="loginOverlay" class="fixed inset-0 flex items-center justify-center p-6">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,#1e3a8a_0%,transparent_70%)] opacity-20"></div>
-        <div class="glass p-12 rounded-[2.5rem] w-full max-w-md border-blue-500/20 shadow-2xl relative">
-            <div class="flex flex-col items-center gap-6 mb-10">
-                <div class="w-20 h-20 bg-blue-600 rounded-3xl flex items-center justify-center shadow-[0_0_40px_rgba(37,99,235,0.4)]">
-                    <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+        <div class="glass p-12 rounded-[3rem] w-full max-w-md border-white/5 shadow-2xl relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent"></div>
+            <div class="flex flex-col items-center gap-8 mb-12">
+                <div class="w-24 h-24 bg-gradient-to-br from-blue-500 to-blue-700 rounded-[2.5rem] flex items-center justify-center shadow-[0_20px_50px_rgba(37,99,235,0.4)]">
+                    <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
                 </div>
                 <div class="text-center">
-                    <h2 class="text-3xl font-black tracking-tighter mb-1 uppercase">Admin <span class="text-blue-500">Access</span></h2>
-                    <p class="text-[9px] text-gray-500 font-bold tracking-[0.4em] uppercase">Secure Command Interface</p>
+                    <h2 class="text-4xl font-black tracking-tighter mb-2">AEGIS <span class="text-blue-500">ADMIN</span></h2>
+                    <p class="text-[10px] text-gray-500 font-black tracking-[0.4em] uppercase">Private Security Interface</p>
                 </div>
             </div>
-            <input id="masterPassword" type="password" placeholder="••••••••••••" class="w-full bg-black/40 border border-white/5 rounded-2xl px-6 py-5 outline-none mb-6 text-center tracking-[1em] text-blue-400">
-            <button onclick="checkPassword()" class="w-full py-5 bg-blue-600 hover:bg-blue-500 rounded-2xl font-black text-xs tracking-widest transition-all neon-glow uppercase">Initialize System</button>
+            <div class="space-y-6">
+                <input id="masterPassword" type="password" placeholder="••••••••••••" class="w-full rounded-2xl px-8 py-5 outline-none text-center tracking-[1.2em] text-blue-500 text-xl font-bold">
+                <button onclick="checkPassword()" class="w-full py-5 btn-primary rounded-2xl font-black text-xs tracking-[0.2em] uppercase">Initialize Terminal</button>
+            </div>
         </div>
     </div>
 
-    <div id="adminContent" class="max-w-6xl mx-auto p-8 opacity-0 pointer-events-none transition-all duration-1000">
+    <div id="adminContent" class="max-w-7xl mx-auto p-10 opacity-0 pointer-events-none transition-all duration-1000">
         <!-- Header -->
-        <header class="flex justify-between items-center mb-12">
-            <div>
-                <h1 class="text-3xl font-bold tracking-tight">AEGIS <span class="text-blue-500">ADMIN</span></h1>
-                <p class="text-gray-500 mt-1">License Management & Key Generation System</p>
+        <header class="flex justify-between items-center mb-20">
+            <div class="flex items-center gap-6">
+                <div class="w-14 h-14 bg-blue-600 rounded-2xl flex items-center justify-center shadow-[0_10px_30px_rgba(37,99,235,0.3)]">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                </div>
+                <div>
+                    <h1 class="text-3xl font-black tracking-tighter uppercase text-white">Aegis <span class="text-blue-500">Suite</span></h1>
+                    <p class="text-[10px] text-gray-500 font-bold tracking-[0.3em] uppercase">Cloud License Authority</p>
+                </div>
             </div>
             <div class="flex gap-4">
-                <div class="glass px-4 py-2 rounded-xl border border-blue-500/20">
-                    <span class="text-xs text-gray-500 uppercase block">Connected Project</span>
-                    <span id="displayProjectId" class="text-sm font-bold text-blue-400">LOADING...</span>
+                <div class="glass px-6 py-3 rounded-2xl border-white/5 flex items-center gap-4">
+                    <div class="text-right">
+                        <span class="text-[9px] text-gray-500 uppercase block font-black tracking-widest">Instance</span>
+                        <span id="displayProjectId" class="text-xs font-bold text-blue-400">LOADING...</span>
+                    </div>
                 </div>
-                <button onclick="testFirebase()" class="glass px-4 py-2 rounded-xl border border-emerald-500/20 hover:bg-emerald-500/10 transition-all text-xs font-bold text-emerald-400">
-                    TEST CONNECTION
+                <button onclick="testFirebase()" class="px-6 py-3 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/20 rounded-2xl transition-all text-[10px] font-black text-emerald-400 tracking-widest uppercase">
+                    Diagnostic Test
                 </button>
             </div>
         </header>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <main class="grid grid-cols-1 lg:grid-cols-12 gap-10">
             <!-- Key Generator -->
-            <div class="lg:col-span-1 flex flex-col gap-6">
-                <div class="glass p-8 rounded-3xl border-blue-500/10">
-                    <h2 class="text-xl font-bold mb-6 flex items-center gap-2">
-                        <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path></svg>
-                        Key Generator
-                    </h2>
-                    
-                    <div class="space-y-6">
+            <div class="lg:col-span-4">
+                <div class="glass p-10 rounded-[2.5rem] border-white/5 sticky top-10">
+                    <div class="flex items-center gap-4 mb-10">
+                        <div class="w-10 h-10 bg-blue-500/10 rounded-xl flex items-center justify-center text-blue-500">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path></svg>
+                        </div>
+                        <h2 class="text-xl font-black tracking-tight uppercase">Key Forge</h2>
+                    </div>
+
+                    <div class="space-y-8">
                         <div>
-                            <label class="text-xs font-bold text-gray-500 uppercase tracking-widest block mb-2 ml-1">Package Type</label>
-                            <select id="packageType" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 outline-none focus:border-blue-500 transition-all text-sm">
-                                <option value="7">7 Days (Standard)</option>
-                                <option value="30">30 Days (Premium)</option>
-                                <option value="90">90 Days (Elite)</option>
-                                <option value="3650">Lifetime (Legendary)</option>
+                            <label class="text-[10px] font-black text-gray-500 uppercase tracking-[0.2em] mb-3 block">License Tier</label>
+                            <select id="packageType" class="w-full px-6 py-5 rounded-2xl outline-none appearance-none cursor-pointer">
+                                <option value="7">Standard (7 Days)</option>
+                                <option value="30">Premium (30 Days)</option>
+                                <option value="3650">Enterprise (Lifetime)</option>
                             </select>
                         </div>
                         
                         <div>
-                            <label class="text-xs font-bold text-gray-500 uppercase tracking-widest block mb-2 ml-1">Generated Key</label>
+                            <label class="text-[10px] font-black text-gray-500 uppercase tracking-[0.2em] mb-3 block">Generated Output</label>
                             <div class="flex gap-2">
-                                <input id="generatedKey" type="text" readonly placeholder="Click Generate..." class="flex-1 bg-black/40 border border-white/5 rounded-xl px-4 py-4 outline-none text-blue-400 font-mono tracking-widest text-center">
-                                <button onclick="copyKey()" class="px-4 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl transition-all">
-                                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
+                                <input id="generatedKey" type="text" readonly placeholder="AWAITING COMMAND" class="flex-1 px-6 py-5 rounded-2xl outline-none text-blue-400 font-mono tracking-widest text-center text-sm">
+                                <button onclick="copyKey()" class="px-5 bg-white/5 hover:bg-white/10 rounded-2xl transition-all text-gray-400">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
                                 </button>
                             </div>
                         </div>
 
-                        <button onclick="generateAndPushKey()" id="genBtn" class="w-full py-4 bg-blue-600 hover:bg-blue-500 rounded-xl font-bold transition-all neon-glow flex items-center justify-center gap-3">
-                            <span id="btnText">GENERATE & SYNC</span>
+                        <button onclick="generateAndPushKey()" id="genBtn" class="w-full py-5 btn-primary rounded-2xl font-black text-xs tracking-widest uppercase flex items-center justify-center gap-3">
+                            <svg id="genIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                            <span id="btnText">Execute Sync</span>
                         </button>
                     </div>
-                </div>
 
-                <div class="glass p-6 rounded-2xl border-white/5 text-xs text-gray-500 leading-relaxed">
-                    <p class="font-bold text-gray-400 mb-2 uppercase tracking-widest">Administrator Note</p>
-                    All generated keys are pushed directly to the Firestore 'licenses' collection. Ensure your Firebase rules allow write access from this domain.
+                    <div class="mt-10 p-6 bg-blue-500/5 rounded-2xl border border-blue-500/10">
+                        <p class="text-[9px] text-gray-500 leading-relaxed font-bold uppercase tracking-widest">
+                            <span class="text-blue-500">NOTICE:</span> ALL ACTIONS ARE LOGGED AND SECURED BY AEGIS CORE ENCRYPTION.
+                        </p>
+                    </div>
                 </div>
             </div>
 
             <!-- License List -->
-            <div class="lg:col-span-2">
-                <div class="glass rounded-3xl border-white/5 overflow-hidden">
-                    <div class="p-8 border-b border-white/5 flex justify-between items-center">
-                        <h2 class="text-xl font-bold">Active Licenses</h2>
-                        <button onclick="fetchLicenses()" class="p-2 hover:bg-white/5 rounded-lg transition-colors">
-                            <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+            <div class="lg:col-span-8">
+                <div class="glass p-10 rounded-[2.5rem] border-white/5 min-h-[600px]">
+                    <div class="flex justify-between items-center mb-10">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 bg-emerald-500/10 rounded-xl flex items-center justify-center text-emerald-500">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
+                            </div>
+                            <h2 class="text-xl font-black tracking-tight uppercase">Registry Authority</h2>
+                        </div>
+                        <button onclick="fetchLicenses()" class="p-3 hover:bg-white/5 rounded-xl transition-all text-gray-500 hover:text-white">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
                         </button>
                     </div>
+
                     <div class="overflow-x-auto">
-                        <table class="w-full text-left border-collapse">
+                        <table class="w-full">
                             <thead>
-                                <tr class="bg-white/2">
-                                    <th class="p-4 text-xs font-bold text-gray-500 uppercase">Key</th>
-                                    <th class="p-4 text-xs font-bold text-gray-500 uppercase">Status</th>
-                                    <th class="p-4 text-xs font-bold text-gray-500 uppercase">Hardware ID</th>
-                                    <th class="p-4 text-xs font-bold text-gray-500 uppercase">Expiry</th>
+                                <tr class="text-[10px] text-gray-600 uppercase font-black tracking-widest text-left border-b border-white/5">
+                                    <th class="pb-6 px-4">Identifier</th>
+                                    <th class="pb-6 px-4">Status</th>
+                                    <th class="pb-6 px-4">Hardware Signature</th>
+                                    <th class="pb-6 px-4">Termination</th>
+                                    <th class="pb-6 px-4">Action</th>
                                 </tr>
                             </thead>
-                            <tbody id="licenseTable">
-                                <!-- Loaded via JS -->
-                                <tr><td colspan="4" class="p-8 text-center text-gray-600">Initializing Database...</td></tr>
+                            <tbody id="licenseTable" class="divide-y divide-white/[0.02]">
+                                <!-- Rows loaded here -->
+                                <tr><td colspan="5" class="py-10 text-center text-gray-600">Initializing Database...</td></tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
-        </div>
+        </main>
     </div>
-
-    </div> <!-- End adminContent -->
 
     <!-- Firebase SDKs -->
     <script type="module">
@@ -171,9 +222,9 @@
                     document.getElementById('adminContent').style.opacity = '1';
                     document.getElementById('adminContent').style.pointerEvents = 'auto';
                     fetchLicenses();
-                }, 500);
+                }, 800);
             } else {
-                alert('Invalid Master Password');
+                alert('Invalid Credentials');
             }
         }
 
@@ -183,22 +234,23 @@
         window.testFirebase = async () => {
             try {
                 await getDocs(collection(db, "licenses"));
-                alert(`SUCCESS: Connected to project "${firebaseConfig.projectId}".\nIf you don't see data in the console, you are logged into the WRONG Firebase account.`);
+                alert(`CONNECTION ACTIVE: Connected to "${firebaseConfig.projectId}"`);
             } catch (e) {
-                alert(`CONNECTION FAILED: ${e.message}`);
+                alert(`COMMUNICATION ERROR: ${e.message}`);
             }
         }
 
         window.copyKey = () => {
             const key = document.getElementById('generatedKey').value;
-            if (!key) return;
+            if (!key || key === "AWAITING COMMAND") return;
             navigator.clipboard.writeText(key);
-            alert('Key copied to clipboard!');
+            alert('Identifier copied to clipboard');
         }
 
         window.generateAndPushKey = async () => {
             const btn = document.getElementById('genBtn');
             const btnText = document.getElementById('btnText');
+            const genIcon = document.getElementById('genIcon');
             const packageType = document.getElementById('packageType').value;
             
             // Generate random key
@@ -208,98 +260,98 @@
                 if (i > 0 && i % 4 === 0) key += '-';
                 key += chars.charAt(Math.floor(Math.random() * chars.length));
             }
-
-            document.getElementById('generatedKey').value = key;
             
             btn.disabled = true;
-            btnText.innerText = 'SYNCING...';
+            btnText.innerText = 'FORGING...';
+            genIcon.classList.add('animate-pulse');
+
+            let expiry = new Date();
+            expiry.setDate(expiry.getDate() + parseInt(packageType));
+            
+            const typeLabel = packageType == "7" ? "7-Day Package" : 
+                            packageType == "30" ? "30-Day Package" : "Lifetime Access";
 
             try {
-                const expiry = new Date();
-                expiry.setDate(expiry.getDate() + parseInt(packageType));
-                
-                const typeLabel = packageType == "7" ? "7-Day Package" : 
-                                packageType == "30" ? "30-Day Package" : 
-                                packageType == "90" ? "90-Day Package" : "Lifetime Access";
-
                 await setDoc(doc(db, "licenses", key), {
-                    isActive: true,
+                    key: key,
                     type: typeLabel,
                     expiryDate: Timestamp.fromDate(expiry),
-                    hwid: null,
-                    key: key
+                    isActive: true,
+                    hwid: null
                 });
 
-                fetchLicenses();
-                alert('Key Generated & Pushed to Firebase!');
+                document.getElementById('generatedKey').value = key;
+                await fetchLicenses();
             } catch (e) {
-                console.error(e);
-                alert(`FIREBASE ERROR: ${e.message}\n\nCheck if you have created the "Firestore Database" in your Firebase console and set Rules to "Test Mode".`);
+                alert('Critical Error: ' + e.message);
             } finally {
                 btn.disabled = false;
-                btnText.innerText = 'GENERATE & SYNC';
+                btnText.innerText = 'Execute Sync';
+                genIcon.classList.remove('animate-pulse');
             }
-        }
-
-        window.revokeLicense = async (key, currentStatus) => {
-            if (!confirm(`Are you sure you want to ${currentStatus ? 'REVOKE' : 'REACTIVATE'} this license?`)) return;
-            try {
-                await updateDoc(doc(db, "licenses", key), { isActive: !currentStatus });
-                fetchLicenses();
-            } catch (e) { alert('Error updating license'); }
-        }
-
-        window.deleteLicense = async (key) => {
-            if (!confirm('PERMANENTLY DELETE this license? This cannot be undone.')) return;
-            try {
-                await deleteDoc(doc(db, "licenses", key));
-                fetchLicenses();
-            } catch (e) { alert('Error deleting license'); }
         }
 
         window.fetchLicenses = async () => {
             const table = document.getElementById('licenseTable');
-            table.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-gray-600">Refreshing...</td></tr>';
+            table.innerHTML = '<tr><td colspan="5" class="py-10 text-center text-gray-500 font-bold uppercase tracking-widest text-[10px]">Accessing Registry...</td></tr>';
             
             try {
                 const querySnapshot = await getDocs(collection(db, "licenses"));
                 table.innerHTML = '';
                 
-                querySnapshot.forEach((doc) => {
-                    const data = doc.data();
-                    const expiry = data.expiryDate.toDate().toLocaleDateString();
+                querySnapshot.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    const expiry = data.expiryDate?.toDate().toLocaleDateString();
                     
-                    const row = `
-                        <tr class="border-b border-white/5 hover:bg-white/2 transition-colors">
-                            <td class="p-4">
-                                <div class="font-mono text-sm text-blue-400">${data.key}</div>
-                                <div class="text-[10px] text-gray-600 uppercase mt-1 font-bold">${data.type}</div>
-                            </td>
-                            <td class="p-4">
-                                <button onclick="revokeLicense('${data.key}', ${data.isActive})" class="px-3 py-1 rounded-full text-[10px] font-bold transition-all ${data.isActive ? 'bg-emerald-500/10 text-emerald-400 hover:bg-red-500/10 hover:text-red-400' : 'bg-red-500/10 text-red-400 hover:bg-emerald-500/10 hover:text-emerald-400'}">
-                                    ${data.isActive ? 'ACTIVE (Revoke)' : 'REVOKED (Activate)'}
-                                </button>
-                            </td>
-                            <td class="p-4">
-                                <div class="text-xs font-mono text-gray-500">${data.hwid || '<span class="text-gray-700 italic">Available</span>'}</div>
-                            </td>
-                            <td class="p-4 text-xs text-gray-400 font-mono">${expiry}</td>
-                            <td class="p-4 text-right">
-                                <button onclick="deleteLicense('${data.key}')" class="p-2 hover:bg-red-500/10 rounded-lg text-gray-600 hover:text-red-400 transition-colors">
+                    const tr = document.createElement('tr');
+                    tr.className = "hover:bg-white/[0.02] transition-all group";
+                    tr.innerHTML = `
+                        <td class="py-6 px-4">
+                            <div class="font-mono text-blue-400 text-sm">${data.key}</div>
+                            <div class="text-[9px] text-gray-600 font-bold mt-1 uppercase">${data.type}</div>
+                        </td>
+                        <td class="py-6 px-4">
+                            <button onclick="toggleKey('${docSnap.id}', ${data.isActive})" class="${data.isActive ? 'bg-emerald-500/10 text-emerald-500' : 'bg-red-500/10 text-red-500'} px-3 py-1 rounded-full text-[9px] font-black tracking-widest uppercase border border-current/20">
+                                ${data.isActive ? 'Active' : 'Revoked'}
+                            </button>
+                        </td>
+                        <td class="py-6 px-4">
+                            <div class="text-[10px] font-mono text-gray-500 truncate max-w-[150px]">
+                                ${data.hwid || '<span class="opacity-30">AWAITING LINK</span>'}
+                            </div>
+                        </td>
+                        <td class="py-6 px-4 text-[10px] font-bold text-gray-400 uppercase tracking-tighter">${expiry}</td>
+                        <td class="py-6 px-4">
+                            <div class="flex gap-2">
+                                <button onclick="deleteKey('${docSnap.id}')" class="p-2 hover:bg-red-500/10 rounded-lg text-gray-700 hover:text-red-500 transition-all">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                                 </button>
-                            </td>
-                        </tr>
+                            </div>
+                        </td>
                     `;
-                    table.innerHTML += row;
+                    table.appendChild(tr);
                 });
             } catch (e) {
-                table.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-red-400">Failed to load licenses. Check Firestore Rules.</td></tr>';
+                table.innerHTML = `<tr><td colspan="5" class="py-10 text-center text-red-500 font-bold uppercase tracking-widest text-[10px]">Access Denied: ${e.message}</td></tr>`;
             }
         }
 
-        // Initial Load
-        fetchLicenses();
+        window.toggleKey = async (id, currentStatus) => {
+            if (!confirm(`Are you sure you want to ${currentStatus ? 'REVOKE' : 'REACTIVATE'} this identifier?`)) return;
+            try {
+                await updateDoc(doc(db, "licenses", id), { isActive: !currentStatus });
+                fetchLicenses();
+            } catch (e) { alert(e.message); }
+        }
+
+        window.deleteKey = async (id) => {
+            if (!confirm('PERMANENTLY PURGE this identifier from the registry?')) return;
+            try {
+                await deleteDoc(doc(db, "licenses", id));
+                fetchLicenses();
+            } catch (e) { alert(e.message); }
+        }
+
     </script>
 </body>
 </html>

@@ -525,95 +525,91 @@ const Dashboard = ({ logToConsole, logs }) => {
                 </button>
               </div>
 
-              <div className="space-y-4 flex-1 overflow-y-auto pr-2 custom-scrollbar">
-                <div className="p-8 bg-gradient-to-br from-blue-500/10 to-blue-700/5 rounded-3xl border border-blue-500/20 relative overflow-hidden group">
-                  <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                    <ShieldCheck className="w-24 h-24 text-blue-500" />
+              <div className="space-y-6 flex-1 overflow-y-auto pr-2 custom-scrollbar">
+                {/* Core Identity - Modern Clean */}
+                <div className="relative group">
+                  <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                    <ShieldCheck className="w-32 h-32 text-blue-500" />
                   </div>
-                  <div className="relative z-10 flex flex-col items-center text-center">
-                    <p className="text-[10px] font-black text-blue-400 uppercase tracking-widest mb-3">Core Identity</p>
-                    <div className="flex items-center gap-3 mb-6 bg-black/40 px-6 py-3 rounded-2xl border border-white/5">
-                      <h3 className="text-xl md:text-2xl font-mono font-bold text-white tracking-wider">{selectedNode.key}</h3>
+                  <div className="relative z-10 flex flex-col items-start pb-6 border-b border-white/10">
+                    <p className="text-[10px] font-black text-blue-400 uppercase tracking-widest mb-4">Core Identity</p>
+                    <div className="flex items-center gap-4 w-full group/key">
+                      <h3 className="text-2xl md:text-3xl font-mono font-black text-white tracking-widest break-all">{selectedNode.key}</h3>
                       <button 
                         onClick={() => {
                           navigator.clipboard.writeText(selectedNode.key);
                           logToConsole('Identifier copied to clipboard', 'info');
                         }}
-                        className="p-2 hover:bg-white/10 rounded-xl transition-all text-gray-400 hover:text-white"
+                        className="p-3 bg-white/5 hover:bg-white/10 rounded-full transition-all text-gray-400 hover:text-white shrink-0 opacity-0 group-hover/key:opacity-100"
                       >
                         <Copy className="w-4 h-4" />
                       </button>
                     </div>
-                    <div className="flex justify-center items-center gap-3">
-                      <span className="px-4 py-1.5 bg-blue-500/20 text-blue-400 rounded-full text-[10px] font-black uppercase tracking-widest border border-blue-500/30">{selectedNode.type}</span>
-                      <span className={`px-4 py-1.5 ${selectedNode.isActive ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' : 'bg-red-500/20 text-red-400 border-red-500/30'} border rounded-full text-[10px] font-black uppercase tracking-widest shadow-[0_0_15px_currentColor]`}>
-                        {selectedNode.isActive ? 'Active' : 'Revoked'}
+                    <div className="flex items-center gap-3 mt-5">
+                      <span className="px-5 py-2 bg-blue-500/10 text-blue-400 rounded-full text-[10px] font-black uppercase tracking-widest border border-blue-500/20">{selectedNode.type}</span>
+                      <span className={`px-5 py-2 ${selectedNode.isActive ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 'bg-red-500/10 text-red-400 border-red-500/20'} border rounded-full text-[10px] font-black uppercase tracking-widest shadow-[0_0_15px_currentColor]`}>
+                        {selectedNode.isActive ? 'Active Node' : 'Revoked Node'}
                       </span>
                     </div>
                   </div>
                 </div>
 
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between p-5 glass rounded-2xl border-white/5 group hover:bg-white/5 transition-all">
-                    <div className="flex items-center gap-4 min-w-0 flex-1">
-                      <div className="p-3 bg-blue-500/10 text-blue-500 rounded-xl shrink-0"><Globe className="w-5 h-5" /></div>
+                {/* Data List - Seamless */}
+                <div className="flex flex-col">
+                  <div className="flex items-center justify-between py-5 border-b border-white/5 group hover:bg-white/[0.02] transition-all px-2 rounded-xl">
+                    <div className="flex items-center gap-5 min-w-0 flex-1">
+                      <div className="p-3.5 bg-blue-500/10 text-blue-500 rounded-full shrink-0 shadow-[0_0_15px_rgba(59,130,246,0.2)]"><Globe className="w-5 h-5" /></div>
                       <div className="min-w-0 pr-4">
-                        <p className="text-[9px] font-black text-gray-500 uppercase tracking-[0.2em]">Network Identity (IP)</p>
-                        <p className="text-sm font-bold text-white mt-1 truncate">{selectedNode.ip || 'N/A'} <span className="text-gray-600 text-xs font-mono ml-2">({selectedNode.platform || 'UNKNOWN'})</span></p>
+                        <p className="text-[9px] font-black text-gray-500 uppercase tracking-[0.2em]">Network Identity</p>
+                        <p className="text-sm font-bold text-white mt-1.5 truncate">{selectedNode.ip || 'N/A'} <span className="text-gray-600 text-xs font-mono ml-2">({selectedNode.platform || 'UNKNOWN'})</span></p>
                       </div>
                     </div>
                     {selectedNode.ip && selectedNode.ip !== 'N/A' && (
-                      <button 
-                        onClick={() => {
-                          navigator.clipboard.writeText(selectedNode.ip);
-                          logToConsole('IP Address copied to clipboard', 'info');
-                        }} 
-                        className="p-2 text-gray-500 hover:text-white transition-colors"
-                      >
+                      <button onClick={() => { navigator.clipboard.writeText(selectedNode.ip); logToConsole('IP copied to clipboard', 'info'); }} className="p-3 bg-white/5 hover:bg-white/10 rounded-full text-gray-500 hover:text-white transition-colors">
                         <Copy className="w-4 h-4" />
                       </button>
                     )}
                   </div>
 
-                  <div className="flex items-center justify-between p-5 glass rounded-2xl border-white/5 group hover:bg-white/5 transition-all">
-                    <div className="flex items-center gap-4 min-w-0 flex-1">
-                      <div className="p-3 bg-purple-500/10 text-purple-500 rounded-xl shrink-0"><Cpu className="w-5 h-5" /></div>
-                      <div className="min-w-0">
+                  <div className="flex items-center justify-between py-5 border-b border-white/5 group hover:bg-white/[0.02] transition-all px-2 rounded-xl">
+                    <div className="flex items-center gap-5 min-w-0 flex-1">
+                      <div className="p-3.5 bg-purple-500/10 text-purple-500 rounded-full shrink-0 shadow-[0_0_15px_rgba(168,85,247,0.2)]"><Cpu className="w-5 h-5" /></div>
+                      <div className="min-w-0 pr-4">
                         <p className="text-[9px] font-black text-gray-500 uppercase tracking-[0.2em]">Hardware Signature</p>
-                        <p className="text-xs font-mono font-bold text-gray-300 mt-1 truncate">{selectedNode.hwid || 'NOT LINKED'}</p>
+                        <p className="text-xs font-mono font-bold text-gray-300 mt-1.5 truncate">{selectedNode.hwid || 'NOT LINKED'}</p>
                       </div>
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between p-5 glass rounded-2xl border-white/5 group hover:bg-white/5 transition-all">
-                    <div className="flex items-center gap-4">
-                      <div className="p-3 bg-amber-500/10 text-amber-500 rounded-xl"><Clock className="w-5 h-5" /></div>
+                  <div className="flex items-center justify-between py-5 border-b border-white/5 group hover:bg-white/[0.02] transition-all px-2 rounded-xl">
+                    <div className="flex items-center gap-5">
+                      <div className="p-3.5 bg-amber-500/10 text-amber-500 rounded-full shrink-0 shadow-[0_0_15px_rgba(245,158,11,0.2)]"><Clock className="w-5 h-5" /></div>
                       <div>
-                        <p className="text-[9px] font-black text-gray-500 uppercase tracking-[0.2em]">Lifecycle</p>
-                        <p className="text-sm font-bold text-white mt-1">{selectedNode.expiryDate?.toDate().toLocaleDateString()} <span className={`text-xs ml-2 font-black ${getDaysRemaining(selectedNode.expiryDate) > 3 ? 'text-blue-400' : 'text-red-500 animate-pulse'}`}>({getDaysRemaining(selectedNode.expiryDate)} Days Left)</span></p>
+                        <p className="text-[9px] font-black text-gray-500 uppercase tracking-[0.2em]">Lifecycle Details</p>
+                        <p className="text-sm font-bold text-white mt-1.5">{selectedNode.expiryDate?.toDate().toLocaleDateString()} <span className={`text-xs ml-2 font-black ${getDaysRemaining(selectedNode.expiryDate) > 3 ? 'text-blue-400' : 'text-red-500 animate-pulse'}`}>({getDaysRemaining(selectedNode.expiryDate)} Days Left)</span></p>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                <div className="p-4 bg-red-500/5 rounded-2xl border border-red-500/10 flex items-center gap-4 mt-2">
-                  <div className="p-2 bg-red-500/10 text-red-500 rounded-lg"><Lock className="w-4 h-4" /></div>
+                <div className="p-5 bg-red-500/5 rounded-2xl border border-red-500/10 flex items-center gap-4 mt-4">
+                  <div className="p-2.5 bg-red-500/10 text-red-500 rounded-full"><Lock className="w-4 h-4" /></div>
                   <p className="text-[9px] text-red-400/80 leading-relaxed font-bold uppercase tracking-widest flex-1">
-                    Revoking access terminates all live sessions immediately.
+                    Revoking access immediately terminates all associated live sessions.
                   </p>
                 </div>
               </div>
 
-              <div className="mt-8 pt-8 border-t border-white/5 flex gap-4 shrink-0">
+              <div className="mt-8 pt-8 border-t border-white/5 flex gap-3 shrink-0">
                 <button 
                   onClick={() => toggleKey(selectedNode.id, selectedNode.isActive)}
-                  className={`flex-1 py-5 ${selectedNode.isActive ? 'bg-red-500/10 text-red-500 border-red-500/20 hover:bg-red-500/20' : 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20 hover:bg-emerald-500/20'} rounded-2xl font-black text-[10px] tracking-[0.2em] uppercase border transition-all`}
+                  className={`flex-1 py-5 ${selectedNode.isActive ? 'bg-red-500/10 text-red-500 border-red-500/20 hover:bg-red-500/20' : 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20 hover:bg-emerald-500/20'} rounded-[2rem] font-black text-[10px] tracking-[0.2em] uppercase border transition-all`}
                 >
                   {selectedNode.isActive ? 'Revoke Access' : 'Restore Access'}
                 </button>
                 <button 
                   onClick={() => deleteKey(selectedNode.id)}
-                  className="px-6 bg-red-500/10 text-red-500 rounded-2xl border border-red-500/20 hover:bg-red-500/20 transition-all flex items-center justify-center"
+                  className="px-8 bg-red-500/10 text-red-500 rounded-[2rem] border border-red-500/20 hover:bg-red-500/20 transition-all flex items-center justify-center hover:scale-105"
                 >
                   <Trash2 className="w-5 h-5" />
                 </button>

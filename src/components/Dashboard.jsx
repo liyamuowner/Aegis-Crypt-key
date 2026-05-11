@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { db } from '../lib/firebase';
 import { collection, getDocs, setDoc, updateDoc, deleteDoc, doc, Timestamp } from 'firebase/firestore';
-import { RefreshCw, Key, ShieldCheck, Lock, Activity, Search, Trash2, Cpu, Globe, Clock, X, ChevronUp, Copy, Terminal, Plus, LayoutGrid, List } from 'lucide-react';
+import { RefreshCw, Key, ShieldCheck, Lock, Activity, Search, Trash2, Cpu, Globe, Clock, X, ChevronUp, ChevronDown, Copy, Terminal, Plus, LayoutGrid, List } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const Dashboard = ({ logToConsole, logs }) => {
@@ -15,6 +15,7 @@ const Dashboard = ({ logToConsole, logs }) => {
   const [showForgeModal, setShowForgeModal] = useState(false);
   const [showTerminal, setShowTerminal] = useState(false);
   const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'list'
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   // Forge States
   const [isForging, setIsForging] = useState(false);
@@ -205,16 +206,43 @@ const Dashboard = ({ logToConsole, logs }) => {
           </div>
 
           <div className="flex gap-4">
-            <select 
-              value={tierFilter}
-              onChange={(e) => setTierFilter(e.target.value)}
-              className="px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest outline-none bg-white/5 border border-white/10 cursor-pointer text-white"
-            >
-              <option value="">All Tiers</option>
-              <option value="Standard">Standard</option>
-              <option value="Premium">Premium</option>
-              <option value="Prime">Aegis Prime</option>
-            </select>
+          <div className="flex gap-4 items-center">
+            <div className="relative">
+              <button 
+                onClick={() => setIsFilterOpen(!isFilterOpen)}
+                className="px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest outline-none bg-white/5 border border-white/10 cursor-pointer text-white flex items-center gap-3 hover:bg-white/10 transition-all min-w-[140px] justify-between"
+              >
+                {tierFilter || 'All Tiers'}
+                <ChevronDown className={`w-3 h-3 transition-transform duration-300 ${isFilterOpen ? 'rotate-180' : ''}`} />
+              </button>
+
+              <AnimatePresence>
+                {isFilterOpen && (
+                  <>
+                    <div className="fixed inset-0 z-10" onClick={() => setIsFilterOpen(false)} />
+                    <motion.div 
+                      initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                      className="absolute top-full mt-2 left-0 w-full glass border border-white/10 rounded-2xl overflow-hidden z-20 py-2 shadow-2xl"
+                    >
+                      {['', 'Standard', 'Premium', 'Prime'].map((tier) => (
+                        <button
+                          key={tier}
+                          onClick={() => {
+                            setTierFilter(tier);
+                            setIsFilterOpen(false);
+                          }}
+                          className={`w-full text-left px-6 py-3 text-[9px] font-black uppercase tracking-widest transition-all ${tierFilter === tier ? 'text-blue-500 bg-blue-500/10' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}
+                        >
+                          {tier || 'All Tiers'}
+                        </button>
+                      ))}
+                    </motion.div>
+                  </>
+                )}
+              </AnimatePresence>
+            </div>
             <div className="relative">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
               <input 

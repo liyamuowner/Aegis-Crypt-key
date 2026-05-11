@@ -2,19 +2,14 @@
 
 @theme {
   --font-outfit: "Outfit", sans-serif;
-  
-  /* Cyber-Sec Premium Theme: Remapping blue to vivid purple/fuchsia */
-  --color-blue-400: #c084fc; 
-  --color-blue-500: #a855f7; 
-  --color-blue-600: #9333ea; 
-  --color-blue-700: #7e22ce; 
-
-  /* Enhancing emerald to a brighter neon for active states */
-  --color-emerald-400: #34d399;
-  --color-emerald-500: #10b981;
+  --color-blue-400: #60a5fa;
+  --color-blue-500: #3b82f6;
+  --color-blue-600: #2563eb;
+  --color-blue-700: #1d4ed8;
 
   --animate-move: move 25s infinite alternate ease-in-out;
   --animate-scanline: scanline 4s linear infinite;
+
 
   @keyframes move {
     from { transform: translate(-15%, -15%) scale(1); }
@@ -29,18 +24,20 @@
 
 @layer base {
   body {
-    @apply bg-[#05000a] text-white font-[--font-outfit] overflow-x-hidden m-0 min-h-screen;
+    @apply bg-[#020204] text-white font-[--font-outfit] overflow-x-hidden m-0 min-h-screen;
   }
 }
 
+
 @layer components {
   .glass {
-    @apply bg-[rgba(15,10,25,0.6)] backdrop-blur-[40px] border border-white/[0.08] shadow-2xl;
+    @apply bg-[rgba(10,10,16,0.7)] backdrop-blur-[30px] border border-white/5;
   }
   
   .neon-glow {
-    @apply shadow-[0_0_30px_rgba(168,85,247,0.2)];
+    @apply shadow-[0_0_30px_rgba(37,99,235,0.15)];
   }
+
 
   .sidebar-item {
     @apply transition-all duration-300 relative;
@@ -52,14 +49,16 @@
 
   .sidebar-item.active::after {
     content: '';
-    @apply absolute left-0 top-1/2 -translate-y-1/2 h-3/5 w-1 bg-blue-500 rounded-r shadow-[0_0_15px_#a855f7];
+    @apply absolute left-0 top-1/2 -translate-y-1/2 h-3/5 w-1 bg-blue-500 rounded-r shadow-[0_0_15px_#3b82f6];
   }
+
 
 
   .btn-primary {
-    @apply bg-gradient-to-br from-blue-500 to-blue-700 shadow-[0_10px_40px_rgba(168,85,247,0.25)] 
-    transition-all duration-300 hover:-translate-y-0.5 hover:scale-[1.02] hover:shadow-[0_20px_50px_rgba(168,85,247,0.4)];
+    @apply bg-gradient-to-br from-blue-500 to-blue-700 shadow-[0_10px_40px_rgba(37,99,235,0.25)] 
+    transition-all duration-300 hover:-translate-y-0.5 hover:scale-[1.02] hover:shadow-[0_20px_50px_rgba(37,99,235,0.4)];
   }
+
 
 
   .stat-card {

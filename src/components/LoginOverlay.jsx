@@ -26,7 +26,7 @@ const LoginOverlay = ({ onLogin }) => {
       >
         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent opacity-50 group-hover:opacity-100 transition-opacity duration-700"></div>
         <div className="flex flex-col items-center gap-8 mb-12">
-          <div className="w-24 h-24 bg-gradient-to-br from-blue-500 to-blue-700 rounded-[2.5rem] flex items-center justify-center shadow-[0_20px_50px_rgba(168,85,247,0.4)] group-hover:scale-110 group-hover:rotate-3 transition-all duration-700">
+          <div className="w-24 h-24 bg-gradient-to-br from-blue-500 to-blue-700 rounded-[2.5rem] flex items-center justify-center shadow-[0_20px_50px_rgba(37,99,235,0.4)] group-hover:scale-110 group-hover:rotate-3 transition-all duration-700">
             <ShieldCheck className="w-12 h-12 text-white" />
           </div>
           <div className="text-center">

@@ -119,6 +119,7 @@ const Dashboard = ({ logToConsole, logs }) => {
       await setDoc(doc(db, "licenses", key), {
         key: key,
         type: typeLabel,
+        createdAt: Timestamp.now(),
         expiryDate: Timestamp.fromDate(expiry),
         isActive: true,
         hwid: null,
@@ -160,6 +161,29 @@ const Dashboard = ({ logToConsole, logs }) => {
     } catch (e) {
       logToConsole(`Purge failed: ${e.message}`, 'error');
     }
+  };
+
+  const getProgress = (l) => {
+    if (!l.expiryDate) return 0;
+    const now = new Date();
+    const expiry = l.expiryDate.toDate();
+    
+    let duration = 7 * 24 * 60 * 60 * 1000;
+    if (!l.createdAt) {
+      if (l.type.includes('Standard')) duration = 7 * 24 * 60 * 60 * 1000;
+      else if (l.type.includes('Premium')) duration = 30 * 24 * 60 * 60 * 1000;
+      else if (l.type.includes('Prime')) duration = 3650 * 24 * 60 * 60 * 1000;
+      else if (l.type.includes('Custom')) {
+        const match = l.type.match(/\((\d+)D\)/);
+        if (match) duration = parseInt(match[1]) * 24 * 60 * 60 * 1000;
+      }
+    } else {
+      duration = expiry - l.createdAt.toDate();
+    }
+
+    const remaining = expiry - now;
+    const progress = (remaining / duration) * 100;
+    return Math.max(0, Math.min(100, progress));
   };
 
   return (
@@ -326,6 +350,14 @@ const Dashboard = ({ logToConsole, logs }) => {
                       <h3 className="font-mono text-white text-lg font-bold mb-1 tracking-wider">{l.key}</h3>
                       <p className="text-[10px] text-gray-500 font-black uppercase tracking-widest">{l.type}</p>
                     </div>
+
+                    <div className="w-full bg-white/5 h-1.5 rounded-full overflow-hidden mb-2">
+                      <motion.div 
+                        initial={{ width: 0 }}
+                        animate={{ width: `${getProgress(l)}%` }}
+                        className="h-full bg-purple-600 shadow-[0_0_10px_rgba(147,51,234,0.5)] transition-all duration-1000"
+                      />
+                    </div>
                     <div className="flex items-center justify-between mt-6 pt-6 border-t border-white/5">
                       <div className="flex items-center gap-2 text-[10px] font-bold text-gray-400">
                         <Clock className="w-3 h-3 text-blue-500" />
@@ -395,6 +427,12 @@ const Dashboard = ({ logToConsole, logs }) => {
                           </div>
                           <div className={`text-[9px] font-black ${getDaysRemaining(l.expiryDate) > 3 ? 'text-blue-500' : 'text-red-500 animate-pulse'}`}>
                             {getDaysRemaining(l.expiryDate)} Days Left
+                          </div>
+                          <div className="w-full bg-white/10 h-1 rounded-full overflow-hidden mt-2">
+                            <div 
+                              className="h-full bg-purple-600/50"
+                              style={{ width: `${getProgress(l)}%` }}
+                            />
                           </div>
                         </td>
                       </motion.tr>
@@ -649,6 +687,13 @@ const Dashboard = ({ logToConsole, logs }) => {
                       <div>
                         <p className="text-[9px] font-black text-gray-500 uppercase tracking-[0.2em]">Lifecycle Details</p>
                         <p className="text-sm font-bold text-white mt-1.5">{selectedNode.expiryDate?.toDate().toLocaleDateString()} <span className={`text-xs ml-2 font-black ${getDaysRemaining(selectedNode.expiryDate) > 3 ? 'text-blue-400' : 'text-red-500 animate-pulse'}`}>({getDaysRemaining(selectedNode.expiryDate)} Days Left)</span></p>
+                        <div className="w-full bg-white/5 h-1 rounded-full overflow-hidden mt-3">
+                          <motion.div 
+                            initial={{ width: 0 }}
+                            animate={{ width: `${getProgress(selectedNode)}%` }}
+                            className="h-full bg-purple-600 shadow-[0_0_10px_rgba(147,51,234,0.3)] transition-all duration-1000"
+                          />
+                        </div>
                       </div>
                     </div>
                   </div>
